@@ -1,0 +1,79 @@
+.Post{
+    margin-top: 23px;
+    padding: 10px;
+    background: white;
+    border: 1px black groove;
+    border-radius: 5px;
+    overflow: scroll;
+    height: 340px;
+    width: 372px;
+}
+
+.Post .content {
+    width: 100%;
+}
+
+.hoverSpace{
+    width: 81%;
+    height: 16px;
+    position: absolute;
+}
+
+.Post .ui.icon.button {
+    background-color: #fff;
+    opacity: initial;
+    color: #c70000de;
+    padding: 0;
+    margin-left: 9px;
+    line-height: 6px;
+    position: relative;
+}
+
+.Post .ui.icon.button i {
+    cursor: pointer;
+    height: 8px;
+}
+
+i.checkmark.small.icon{
+    color: #ce0000;
+    padding-left: 6px;
+}
+
+.ui.list .list>.item .header, .ui.list>.item .header {
+    width:100%;
+    height: auto;
+}
+
+.ui.list .list > .item > i.icon {
+    display: inline-block;
+}
+
+.ui.list .list > .item > .icon + .content {
+    display: inline-block;
+    width: calc(100% - 20px);
+}
+
+.ui.segments:last-child {
+    position: absolute;
+    color:black;
+    z-index: 1;
+    top:-1px;
+    left: 29.7%;
+    line-height: 12px;
+    width: 72px;
+}
+ .ui.segments:last-child > div {
+    padding: 3px;
+}
+
+.ui.segment, .ui.segments .segment {
+    font-size: 10px;
+}
+
+.none {
+    visibility: hidden;
+}
+
+.replace{
+    display: inline-block;
+}

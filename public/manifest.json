@@ -1,0 +1,15 @@
+{
+    "name": "Getting Started Example",
+    "version": "1.0",
+    "description": "Build an Extension!",
+    "permissions": ["storage","activeTab","declarativeContent"],
+    "background": {
+      "scripts": ["static/js/main.b142a920.js"],
+      "persistent": false
+    },
+    "browser_action": {
+      "default_popup": "index.html",
+      "default_icon": "noun_Time_1423961.png"
+    },
+    "manifest_version": 2
+  }

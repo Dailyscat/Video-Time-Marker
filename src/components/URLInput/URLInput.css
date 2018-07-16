@@ -1,0 +1,14 @@
+.URLInput {
+    padding-left: 106px;
+    margin-top: 20px;
+}
+
+.URLInput i{
+    color: #c70000de;
+}
+
+.URLInput .ui.label{
+    background-color: #c70000de;
+    color: white;
+}
+
