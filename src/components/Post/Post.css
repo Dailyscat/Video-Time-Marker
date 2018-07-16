@@ -24,7 +24,7 @@
     opacity: initial;
     color: #c70000de;
     padding: 0;
-    margin-left: 9px;
+    margin-left: 7px;
     line-height: 6px;
     position: relative;
 }
@@ -36,13 +36,20 @@
 
 i.checkmark.small.icon{
     color: #ce0000;
-    padding-left: 6px;
+    margin-left: 4px;
+    width: 11px;
 }
 
 .ui.list .list>.item .header, .ui.list>.item .header {
-    width:100%;
-    height: auto;
+    width: 100%;
+    height: 21px;
+    font-size: 13px;
 }
+
+.ui.list .list>.item .header.none, .ui.list>.item .header.none {
+    display:none;
+}
+
 
 .ui.list .list > .item > i.icon {
     display: inline-block;
@@ -70,10 +77,18 @@ i.checkmark.small.icon{
     font-size: 10px;
 }
 
-.none {
+
+.hidden {
     visibility: hidden;
 }
 
+.ui.mini.input.none{
+    display: none;
+}
+
+.ui.mini.input{
+    height:22px;
+}
 .replace{
     display: inline-block;
 }

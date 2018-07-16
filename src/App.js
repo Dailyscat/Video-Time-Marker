@@ -14,7 +14,7 @@ class App extends Component {
       data : [],
       defaultFolder : {
         folderName : "Youtube Time Marker",
-        folderId: 1,
+        folderId: "top",
         children: [],
       },
       folder: {
@@ -117,26 +117,36 @@ class App extends Component {
       var currentFolderId = this.state.selectedFolderId;
       var currentCategory = this.state.category;
       chromeService.get(result => {      
-        if(currentFolderId > 1){
-        } else {
-
-    
-          var obj = result.children.concat([
+        if(currentFolderId === "top"){
+          result.children.push(
             this.state.file
-          ])
-          this.setState({
-            defaultFolder: {
-              ...this.state.defaultFolder,
-              children:obj,
-            }
-          })
-          chromeService.remove("children");
-          chromeService.set({children: obj});
+          )
+        } else {
+          function makeDownFile(result) {
+            result.children.map((currentVal, idx, arr) => {
+              if(currentVal.category === "folder"){
+                if(Number(this.state.selectedFolderId) === currentVal.id){
+                  currentVal.children.push(this.state.file);
+                }else{
+                  if(currentVal.children.length > 0){
+                    makeDownFile.call(this,currentVal);
+                  }else{
+                    return "";
+                  }
+                }
+              }else{
+                return "";
+              }
+            })  
+          }
+          makeDownFile.call(this,result);
         }
+        chromeService.set({children: result.children});
+        console.log(result.children);
         this.setState({
           defaultFolder: {
             ...this.state.defaultFolder,
-            children : obj,
+            children : result.children,
           }
         })
       });
