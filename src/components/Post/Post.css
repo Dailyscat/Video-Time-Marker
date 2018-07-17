@@ -82,11 +82,11 @@ i.checkmark.small.icon{
     visibility: hidden;
 }
 
-.ui.mini.input.none{
+.none{
     display: none;
 }
 
-.ui.mini.input{
+.editInput {
     height:22px;
 }
 .replace{

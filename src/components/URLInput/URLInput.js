@@ -28,6 +28,12 @@ class URLInput extends Component {
         });
     }
 
+    pushEnterFunction (ev) {
+        if (ev.keyCode === 13) {
+            this.setTimeMarker.call(this);
+        }
+    }
+
     render() {
         
         return (
@@ -40,6 +46,7 @@ class URLInput extends Component {
                     labelPosition='right'
                     placeholder='Mark Name...'
                     onChange={this.updateMarkName.bind(this)}
+                    onKeyDown = {this.pushEnterFunction.bind(this)}
                 />
             </div>
         );

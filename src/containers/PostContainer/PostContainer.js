@@ -12,9 +12,12 @@ class PostContainer extends Component {
                      />
                 <Post
                     data = {this.props.data} 
+                    defaultFolderName = {this.props.defaultFolderName}
                     addFolder = {this.props.addFolder.bind(this)}
                     selectedFolder = {this.props.selectedFolder.bind(this)}
                     selectedFolderId = {this.props.selectedFolderId}
+                    receiveEditedName = {this.props.receiveEditedName.bind(this)}
+                    delete = {this.props.delete.bind(this)}
                 />
             </PostWrapper>
         );

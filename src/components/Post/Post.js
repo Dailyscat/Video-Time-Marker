@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { List, Button, Icon, Segment, Input } from 'semantic-ui-react'
+import { List, Button, Icon, Segment } from 'semantic-ui-react'
 import './Post.css';
 
 
@@ -8,17 +8,17 @@ function FileComp(props) {
             <List.Item>
             <List.Icon name='file' />
                 <List.Content>
-                    <Input focus size="mini" className = "none" /> 
+                    <input  className = "editInput none" defaultValue = {props.data.name} onKeyDown = {props.pushEnterFunction} onBlur = {props.inputBlur} /> 
                     <List.Header data-id = {props.data.id} onMouseEnter = {props.onHover} onMouseLeave = {props.offHover} >
                         {props.data.name}
                             <div className="replace"></div>
                             <Fragment>                           
-                                <Button icon className = "hidden" color="white" > 
-                                    <Icon size="small" name="ellipsis horizontal" onClick = {props.folderEditBtn}/>
+                                <Button icon className = "hidden" color="white" data-id = {props.data.id} > 
+                                    <Icon size="small" name="ellipsis horizontal" onClick = {props.folderEditBtn} data-id = {props.data.id}/>
                                         <Segment.Group compact className = "hidden"  >
                                             <Segment textAlign="center" >Copy URL</Segment>
                                             <Segment textAlign="center" onClick = {props.editName}>Edit Name</Segment>
-                                            <Segment textAlign="center" >Delete</Segment>
+                                            <Segment textAlign="center" onClick = {props.delete}>Delete</Segment>
                                         </Segment.Group>
                                 </Button>
                             </Fragment>
@@ -33,8 +33,8 @@ function FolderComp(props) {
                 <List.Item>
                     <List.Icon name='folder' />
                     <List.Content>
-                        <Input focus size="mini" className = "none" /> 
-                        <List.Header data-id = {props.data.id} onClick = {props.selectedFolder} onMouseEnter = {props.onHover} onMouseLeave = {props.offHover}>
+                        <input  className = "editInput none" defaultValue= {props.data.name} onKeyDown = {props.pushEnterFunction} onBlur = {props.inputBlur} /> 
+                        <List.Header data-id = {props.data.id} onClick = {props.selectedFolder} onMouseEnter = {props.onHover} onMouseLeave = {props.offHover} onDoubleClick = {props.hideList}>
                             {props.data.name}
                             {Number(props.selectedFolderId) === props.data.id ? <Icon name = "checkmark" size= "small" data-id = {props.data.id}/> : <div className="replace"></div>}
                                     <Fragment>                           
@@ -43,7 +43,7 @@ function FolderComp(props) {
                                                 <Segment.Group compact className = "hidden"  >
                                                     <Segment textAlign="center" onClick = {props.addFolder}>Add Folder</Segment>
                                                     <Segment textAlign="center" onClick = {props.editName}>Edit Name</Segment>
-                                                    <Segment textAlign="center" >Delete</Segment>
+                                                    <Segment textAlign="center" onClick = {props.delete}>Delete</Segment>
                                                 </Segment.Group>
                                         </Button>
                                     </Fragment>
@@ -62,6 +62,10 @@ function FolderComp(props) {
                                     folderEditBtn = {props.folderEditBtn}
                                     addFolder = {props.addFolder}
                                     editName = {props.editName}
+                                    pushEnterFunction = {props.pushEnterFunction}
+                                    inputBlur = {props.inputBlur}
+                                    delete = {props.delete}
+                                    hideList = {props.hideList}
                                 />
                             </List.List>)
                         }
@@ -86,6 +90,9 @@ function Tree (props){
                                         folderEditBtn = {props.folderEditBtn}
                                         addFolder = {props.addFolder}
                                         editName = {props.editName}
+                                        pushEnterFunction = {props.pushEnterFunction}
+                                        inputBlur = {props.inputBlur}
+                                        delete = {props.delete}
                                     />);
                         }
                         if(currentVal.category === "folder"){
@@ -98,6 +105,10 @@ function Tree (props){
                                 folderEditBtn = {props.folderEditBtn}
                                 addFolder = {props.addFolder}
                                 editName = {props.editName}
+                                pushEnterFunction = {props.pushEnterFunction}
+                                inputBlur = {props.inputBlur}
+                                delete = {props.delete}
+                                hideList = {props.hideList}
                             />);
                         }
                     })
@@ -151,36 +162,17 @@ class Post extends Component {
         }
     }
 
-    offHover(ev){   
-            if(ev.target.tagName === "BUTTON"){
-                ev.target.classList.add("hidden");
-                if(!ev.target.children[1].classList.contains("hidden")){
-                    ev.target.children[1].classList.add("hidden");
-                }
-            }else if(ev.target.className === "ellipsis horizontal small icon"){
-                ev.target.parentElement.classList.add("hidden");
-                if(!ev.target.nextElementSibling.classList.contains("hidden")){
-                    ev.target.nextElementSibling.classList.add("hidden");
-                }
-            }else if(ev.target.className == "checkmark small icon"){
-                ev.target.nextElementSibling.classList.add("hidden");
-                if(!ev.target.nextElementSibling.children[1].classList.contains("hidden")){
-                    ev.target.nextElementSibling.children[1].classList.add("hidden");
-                }
-            }else if(ev.target.className === "ui center aligned segment"){
-                ev.target.parentElement.classList.add("hidden");
-                ev.target.parentElement.parentElement.classList.add("hidden");
-            }else if(ev.target.className === "ui compact segments"){
-                ev.target.classList.add("hidden");
-                ev.target.parentElement.classList.add("hidden");
-            }else{
-                if(!ev.target.children[1].classList.contains("hidden")){
-                    ev.target.children[1].classList.add("hidden");
-                    if(!ev.target.children[1].children[1].classList.contains("hidden")){
-                        ev.target.children[1].children[1].classList.add("hidden");
-                    }
-                }
-            }
+    offHover(ev){
+        var button = ev.currentTarget.querySelector(".ui.icon.button");
+        var segments = ev.currentTarget.querySelector(".ui.compact.segments");
+
+        if (button == ev.target) {
+            button.classList.add("hidden");
+            return;
+        }
+
+        button.classList.add("hidden");
+        segments.classList.add("hidden");
         }
 
 
@@ -194,8 +186,36 @@ class Post extends Component {
     }
 
     editName (ev){
+        
         ev.target.parentElement.parentElement.parentElement.previousElementSibling.classList.remove("none")
         ev.target.parentElement.parentElement.parentElement.classList.add("none");
+    }
+
+    pushEnterFunction (ev) {
+        if (ev.keyCode === 13) {
+            this.receiveEditedName(ev.target.value, ev.target.nextElementSibling.dataset.id,ev)
+        }
+    }
+
+    inputBlur (ev) {
+
+        this.receiveEditedName(ev.target.value, ev.target.nextElementSibling.dataset.id,ev)
+    }
+
+    receiveEditedName (editedName, currentId, ev){
+        this.props.receiveEditedName(editedName, currentId);
+        ev.target.classList.add("none")
+        ev.target.nextElementSibling.classList.remove("none");
+    }
+
+    delete (ev) {
+        this.props.delete(ev.target.parentElement.parentElement.dataset.id);
+    }
+
+    hideList (ev) {
+        console.log(ev.target)
+        console.log(ev.target.nextElementSibling);
+        ev.target.nextElementSibling.classList.toggle("none");
     }
 
     render() {
@@ -205,18 +225,16 @@ class Post extends Component {
                 <List.Item>
                     <List.Icon name='folder' />
                     <List.Content>
-                        <Input focus size="mini" className = "none" /> 
-                        <List.Header className="topOfTopFolder" data-id = {"top"} onClick = {this.selectedFolder.bind(this)} onMouseEnter = {this.onHover.bind(this)} onMouseLeave = {this.offHover.bind(this)}>
-                            YouTube Time Marker
+                        <input  className = "editInput none" defaultValue = {this.props.defaultFolderName} onKeyDown = {this.pushEnterFunction.bind(this)} onBlur = {this.inputBlur.bind(this)} /> 
+                        <List.Header className="topOfTopFolder" data-id = {"top"} onClick = {this.selectedFolder.bind(this)} onMouseEnter = {this.onHover.bind(this)} onMouseLeave = {this.offHover.bind(this)} onDoubleClick = {this.hideList.bind(this)}>
+                            {this.props.defaultFolderName}
                             {this.props.selectedFolderId === this.state.defaultSelected ? <Icon name = "checkmark" size= "small" data-id = "top"/> : <div className="replace"></div>}
                                 <Fragment>                           
-                                    <Button icon  color="white" className = "hidden" > 
-                                        <Icon size="small" name="ellipsis horizontal" onClick = {this.folderEditBtn.bind(this)}/>
+                                    <Button icon  color="white" className = "hidden" data-id = "top" > 
+                                        <Icon size="small" name="ellipsis horizontal" onClick = {this.folderEditBtn.bind(this)} data-id = "top"/>
                                             <Segment.Group compact className = "hidden" >
                                                 <Segment textAlign="center" onClick = {this.addFolder.bind(this)}>Add Folder</Segment>
                                                 <Segment textAlign="center" onClick = {this.editName.bind(this)}>Edit Name</Segment>
-                                                <Segment textAlign="center" >Delete</Segment>
-                                                <Segment textAlign="center" >experiment</Segment>
                                             </Segment.Group>
                                     </Button>
                                 </Fragment>
@@ -231,6 +249,10 @@ class Post extends Component {
                             folderEditBtn = {this.folderEditBtn.bind(this)}
                             addFolder = {this.addFolder.bind(this)}
                             editName = {this.editName.bind(this)}
+                            pushEnterFunction = {this.pushEnterFunction.bind(this)}
+                            inputBlur = {this.inputBlur.bind(this)}
+                            delete = {this.delete.bind(this)}
+                            hideList = {this.hideList.bind(this)}
                         />
                         </List.List>
                     </List.Content>  
