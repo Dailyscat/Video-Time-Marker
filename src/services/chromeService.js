@@ -15,6 +15,7 @@ const extractVideoId =
         var ampersandPosition = video_id.indexOf('&');
         if(ampersandPosition != -1) {
             video_id = video_id.substring(0, ampersandPosition);
+            return video_id;
         }else{
             return video_id;
         }
@@ -23,7 +24,7 @@ const extractVideoId =
 const videoId = (cb) => {
     chrome.tabs.executeScript({
         code: extractVideoId
-    }, cb);    
+    }, result => cb(result));    
 }
 
 const set = (obj,cb) => {
@@ -44,6 +45,18 @@ const initialDB = (cb) => {
     chrome.storage.sync.getBytesInUse(cb);
 }
 
+const newTab = (urlObj, cb) => {
+    chrome.tabs.create(urlObj, cb)
+}
+
+const currentTab = (urlObj, cb) => {
+    chrome.tabs.update(urlObj, cb);
+}
+
+const onLoadHandler = (cb) => {
+    chrome.tabs.onUpdated.addListener(cb);
+}
+
 export default {
     currentTime,
     videoId,
@@ -51,4 +64,7 @@ export default {
     get,
     remove,
     initialDB,
+    newTab,
+    currentTab,
+    onLoadHandler,
 };

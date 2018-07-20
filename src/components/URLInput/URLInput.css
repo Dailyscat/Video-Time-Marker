@@ -1,7 +1,62 @@
 .URLInput {
     padding-left: 106px;
     margin-top: 20px;
+    position:relative;
 }
+
+a:active, a:hover {
+    color: black;
+}
+
+.myButton {
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #ffffff), color-stop(1, #ffffff));
+	background:-moz-linear-gradient(top, #ffffff 5%, #ffffff 100%);
+	background:-webkit-linear-gradient(top, #ffffff 5%, #ffffff 100%);
+	background:-o-linear-gradient(top, #ffffff 5%, #ffffff 100%);
+	background:-ms-linear-gradient(top, #ffffff 5%, #ffffff 100%);
+	background:linear-gradient(to bottom, #ffffff 5%, #ffffff 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#ffffff',GradientType=0);
+	background-color: #fff;
+    border: 1px solid #ff0037;
+    cursor: pointer;
+    color: red;
+    font-family: Arial;
+    font-size: 17px;
+    font-weight: 700;
+    font-style: italic;
+    text-decoration: none;
+    text-shadow: 0 1px 0 #fff;
+    border-radius: 50px;
+    position: relative;
+    top: -1px;
+    padding: 7px;
+    display: inline-block;
+    margin-top: -5px;
+    width: 72px;
+    text-align: center;
+    height: 34px;
+}
+
+.buttonCase{
+    position: absolute;
+    left: 4px;
+    top: 8.5px;
+}
+.myButton:hover {
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #ffffff), color-stop(1, #ffffff));
+	background:-moz-linear-gradient(top, #ffffff 5%, #ffffff 100%);
+	background:-webkit-linear-gradient(top, #ffffff 5%, #ffffff 100%);
+	background:-o-linear-gradient(top, #ffffff 5%, #ffffff 100%);
+	background:-ms-linear-gradient(top, #ffffff 5%, #ffffff 100%);
+	background:linear-gradient(to bottom, #ffffff 5%, #ffffff 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#ffffff',GradientType=0);
+	background-color:#ffffff;
+}
+.myButton:active {
+	position:relative;
+	top:1px;
+}
+
 
 .URLInput i{
     color: #c70000de;
@@ -12,3 +67,6 @@
     color: white;
 }
 
+.ui.input.none{
+    display: none;
+}

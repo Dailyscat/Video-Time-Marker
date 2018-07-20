@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { PostWrapper, URLInput, Post } from '../../components/index';
+import { PostWrapper, URLInput, Post, Search} from '../../components/index';
 
 
 
@@ -9,8 +9,13 @@ class PostContainer extends Component {
             <PostWrapper>
                 <URLInput 
                     setTimeMarker = {this.props.setTimeMarker.bind(this)}
-                     />
-                <Post
+                    inYoutube = {this.props.inYoutube}
+                    searchInputVal = {this.props.searchInputVal}
+                    changeView = {this.props.changeView.bind(this)}
+                    />
+                {this.props.changePostView 
+                ? 
+                    <Post
                     data = {this.props.data} 
                     defaultFolderName = {this.props.defaultFolderName}
                     addFolder = {this.props.addFolder.bind(this)}
@@ -18,7 +23,22 @@ class PostContainer extends Component {
                     selectedFolderId = {this.props.selectedFolderId}
                     receiveEditedName = {this.props.receiveEditedName.bind(this)}
                     delete = {this.props.delete.bind(this)}
+                    moveToUrl = {this.props.moveToUrl.bind(this)}
+                    currentAddFolder = {this.props.currentAddFolder}
                 />
+                :
+                    <Search
+                        data = {this.props.filteredArr} 
+                        defaultFolderName = {this.props.defaultFolderName}
+                        addFolder = {this.props.addFolder.bind(this)}
+                        selectedFolder = {this.props.selectedFolder.bind(this)}
+                        selectedFolderId = {this.props.selectedFolderId}
+                        receiveEditedName = {this.props.receiveEditedName.bind(this)}
+                        delete = {this.props.delete.bind(this)}
+                        moveToUrl = {this.props.moveToUrl.bind(this)}
+                        currentAddFolder = {this.props.currentAddFolder}
+                    />
+                }
             </PostWrapper>
         );
     }

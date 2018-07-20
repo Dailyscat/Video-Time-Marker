@@ -1,4 +1,4 @@
-.Post{
+.Search{
     margin-top: 23px;
     padding: 10px;
     background: white;
@@ -9,15 +9,12 @@
     width: 372px;
 }
 
-.header{
-    cursor:pointer;
-}
-.Post .content {
+.Search .content {
     width: 100%;
 }
 
 
-.Post .ui.icon.button {
+.Search .ui.icon.button {
     background-color: #fff;
     opacity: initial;
     color: #c70000de;
@@ -27,7 +24,7 @@
     position: relative;
 }
 
-.Post .ui.icon.button i {
+.Search .ui.icon.button i {
     cursor: pointer;
     height: 8px;
 }
@@ -82,10 +79,17 @@ i.check.circle.small.icon{
     visibility: hidden;
 }
 
+.header{
+    cursor:pointer;
+}
+
 .none{
     display: none;
 }
 
+.item.none{
+    display:none;
+}
 .editInput {
     height:22px;
 }

@@ -1,15 +1,14 @@
 import React, { Component, Fragment } from 'react';
 import { List, Button, Icon, Segment } from 'semantic-ui-react'
-import './Post.css';
-
+import './Search.css';
 
 
 function FileComp(props) {
     return (
-            <List.Item draggable = "true">
-            <List.Icon name='file video outline' color = "red" />
+            <List.Item>
+            <List.Icon name='file video outline' color="red" />
                 <List.Content>
-                    <input  className = "editInput none" defaultValue = {props.data.name} onKeyDown = {props.pushEnterFunction} onBlur = {props.inputBlur} autoFocus  /> 
+                    <input  className = "editInput none" defaultValue = {props.data.name} onKeyDown = {props.pushEnterFunction} onBlur = {props.inputBlur} autoFocus /> 
                     <List.Header data-id = {props.data.id} data-url = {props.data.url} onMouseEnter = {props.onHover} onMouseLeave = {props.offHover} onDoubleClick = {props.moveToUrl}>
                         {props.data.name}
                             <div className="replace"></div>
@@ -32,10 +31,10 @@ function FileComp(props) {
 
 function FolderComp(props) {
     return (
-                <List.Item draggable = "true">
-                    <List.Icon name='folder outline ' />
+                <List.Item>
+                    <List.Icon name = 'folder outline' />
                     <List.Content>
-                        <input  className = "editInput none" defaultValue= {props.data.name} onKeyDown = {props.pushEnterFunction} onBlur = {props.inputBlur} autoFocus /> 
+                        <input  className = "editInput none" defaultValue= {props.data.name} onKeyDown = {props.pushEnterFunction} onBlur = {props.inputBlur} autoFocus/> 
                         <List.Header data-id = {props.data.id} onClick = {props.selectedFolder} onMouseEnter = {props.onHover} onMouseLeave = {props.offHover} onDoubleClick = {props.hideList}>
                             {props.data.name}
                             {Number(props.selectedFolderId) === props.data.id ? <Icon color = "red" name = "check circle" size= "small" data-id = {props.data.id}/> : <Icon name = "check circle" size= "small" data-id = {props.data.id}/>}
@@ -55,7 +54,6 @@ function FolderComp(props) {
                             ? ""
                             : 
                             (<List.List className = {props.currentAddFolder !== null ? "" : "none"}>
-                                {console.log(props.currentAddFolder, props.data.id)}
                                 <Tree 
                                     data = {props.data.children} 
                                     selectedFolderId = {props.selectedFolderId}
@@ -132,8 +130,7 @@ function Tree (props){
 }
 
 
-
-class Post extends Component {
+class Search extends Component {
 
     constructor(props){
         super(props);
@@ -144,11 +141,9 @@ class Post extends Component {
             selected: "top",
             hover: false,
             folderEditList:false,
-
         };
     }   
 
-    
 
     selectedFolder(ev){
         if(ev.currentTarget.dataset){
@@ -163,6 +158,7 @@ class Post extends Component {
     }
 
     onHover(ev){
+
         if(ev.currentTarget.className.includes("header")){
             ev.currentTarget.children[1].classList.remove("hidden")
         }else{
@@ -171,7 +167,6 @@ class Post extends Component {
     }
 
     offHover(ev){
-        
         var button = ev.currentTarget.querySelector(".ui.icon.button");
         var segments = ev.currentTarget.querySelector(".ui.compact.segments");
 
@@ -191,8 +186,7 @@ class Post extends Component {
 
     addFolder (ev){
         var selectedFolderId = ev.target.parentElement.parentElement.parentElement.dataset.id;
-            this.props.addFolder(selectedFolderId);
-
+        this.props.addFolder(selectedFolderId);
     }
 
     editName (ev){
@@ -220,14 +214,12 @@ class Post extends Component {
 
     delete (ev) {
         this.props.delete(ev.target.parentElement.parentElement.dataset.id);
+        ev.target.parentElement.parentElement.parentElement.parentElement.parentElement.classList.add("none");
     }
 
     hideList (ev) {
-        
-        if(ev.target.nextElementSibling){
-            ev.target.nextElementSibling.classList.toggle("none");
-            ev.currentTarget.parentElement.previousElementSibling.classList.toggle("open")
-        }
+        ev.target.nextElementSibling.classList.toggle("none");
+        ev.currentTarget.parentElement.previousElementSibling.classList.toggle("open")
     }
 
     moveToUrl (ev) {
@@ -240,52 +232,32 @@ class Post extends Component {
         document.execCommand("copy");
         ev.target.previousElementSibling.classList.add("none");
     }
+
     render() {
         return (
-            <div className="Post">
+            <div className="Search">
                 <List >
-                <List.Item>
-                    <List.Icon name='folder open' />
-                    <List.Content>
-                        <input  className = "editInput none" defaultValue = {this.props.defaultFolderName} onKeyDown = {this.pushEnterFunction.bind(this)} onBlur = {this.inputBlur.bind(this)} autoFocus/> 
-                        <List.Header className="topOfTopFolder" data-id = {"top"} onClick = {this.selectedFolder.bind(this)} onMouseEnter = {this.onHover.bind(this)} onMouseLeave = {this.offHover.bind(this)} onDoubleClick = {this.hideList.bind(this)}>
-                            {this.props.defaultFolderName}
-                            {this.props.selectedFolderId === this.state.defaultSelected ? <Icon color = "red" name = "check circle" size= "small" data-id = "top"/> : <Icon name = "check circle" size= "small" data-id = "top"/>}
-                                <Fragment>                           
-                                    <Button icon  color="white" className = "hidden" data-id = "top" > 
-                                        <Icon size="small" name="ellipsis horizontal" onClick = {this.folderEditBtn.bind(this)} data-id = "top"/>
-                                            <Segment.Group compact className = "hidden" >
-                                                <Segment textAlign="center" onClick = {this.addFolder.bind(this)}>Add Folder</Segment>
-                                                <Segment textAlign="center" onClick = {this.editName.bind(this)}>Edit Name</Segment>
-                                            </Segment.Group>
-                                    </Button>
-                                </Fragment>
-                        </List.Header>
-                        <List.List>
-                        <Tree 
-                            data = {this.props.data}
-                            selectedFolderId = {this.props.selectedFolderId}
-                            selectedFolder = {this.selectedFolder.bind(this)}
-                            onHover = {this.onHover.bind(this)}
-                            offHover = {this.offHover.bind(this)}
-                            folderEditBtn = {this.folderEditBtn.bind(this)}
-                            addFolder = {this.addFolder.bind(this)}
-                            editName = {this.editName.bind(this)}
-                            pushEnterFunction = {this.pushEnterFunction.bind(this)}
-                            inputBlur = {this.inputBlur.bind(this)}
-                            delete = {this.delete.bind(this)}
-                            hideList = {this.hideList.bind(this)}
-                            moveToUrl = {this.moveToUrl.bind(this)}
-                            copyUrl = {this.copyUrl.bind(this)}
-                            currentAddFolder = {this.props.currentAddFolder}
-                        />
-                        </List.List>
-                    </List.Content>  
-                </List.Item>
+                    <Tree 
+                        data = {this.props.data}
+                        selectedFolderId = {this.props.selectedFolderId}
+                        selectedFolder = {this.selectedFolder.bind(this)}
+                        onHover = {this.onHover.bind(this)}
+                        offHover = {this.offHover.bind(this)}
+                        folderEditBtn = {this.folderEditBtn.bind(this)}
+                        addFolder = {this.addFolder.bind(this)}
+                        editName = {this.editName.bind(this)}
+                        pushEnterFunction = {this.pushEnterFunction.bind(this)}
+                        inputBlur = {this.inputBlur.bind(this)}
+                        delete = {this.delete.bind(this)}
+                        hideList = {this.hideList.bind(this)}
+                        moveToUrl = {this.moveToUrl.bind(this)}
+                        copyUrl = {this.copyUrl.bind(this)}
+                        currentAddFolder = {this.props.currentAddFolder}
+                    />
                 </List>
             </div>
         );
     }
 }
 
-export default Post;
+export default Search;

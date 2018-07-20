@@ -1,0 +1,16 @@
+.SettingPage {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    background: white;
+    border-radius: 102px;
+    height: 133px;
+    text-align: center;
+    width: 100%;
+}
+
+.none{
+    display: none;
+}
