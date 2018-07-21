@@ -61,6 +61,35 @@ class App extends Component {
       });
     });
 
+    chromeService.get(result => {
+      function closeFolder (result){
+        if(result.children){
+          result.children.map((currentVal, idx, arr) => {
+            currentVal.open = false;
+            if(currentVal.category === "folder"){
+              if(currentVal.children.length > 0){
+                closeFolder.call(this,currentVal);
+              }else{
+                return; 
+              }
+            }else{
+              return "";
+            }
+          
+        })  
+        }
+          
+      }
+      closeFolder(result);
+      this.setState({
+        defaultFolder: {
+          ...this.state.defaultFolder,
+          children:result.children,
+        }
+      });
+      chromeService.set({children: result.children})
+    })
+
     chromeService.onLoadHandler((tabId, changeInfo, tab) =>{
         if(changeInfo.status == "loading") {
                 window.close();
@@ -136,19 +165,9 @@ class App extends Component {
               if(Number(selectedFolderId) === currentVal.id){
                 const folderCopy = Object.assign({}, this.state.folder);
                 folderCopy.id = Date.now();
-                this.setState({currentAddFolder:folderCopy.id});
+                this.setState({currentAddFolder:folderCopy.id})
                 currentVal.children.push(folderCopy);
-                currentVal.children.sort(function(a, b) {
-                  var a = a.category;
-                  var b = b.category;
-                  if (a > b) {
-                    return -1;
-                  }
-                  if (a < b) {
-                    return 1;
-                  }
-                  return 0;
-                })
+                currentVal.open = true;
                 return;
               }else{
                 if(currentVal.children.length > 0){
@@ -198,17 +217,18 @@ class App extends Component {
               if(currentVal.category === "folder"){
                 if(Number(this.state.selectedFolderId) === currentVal.id){
                   currentVal.children.push(this.state.file);
-                  currentVal.children.sort(function(a, b) {
-                    var a = a.category;
-                    var b = b.category;
-                    if (a > b) {
-                      return -1;
-                    }
-                    if (a < b) {
-                      return 1;
-                    }
-                    return 0;
-                  })
+                  currentVal.open = true;
+                  // currentVal.children.sort(function(a, b) {
+                  //   var a = a.category;
+                  //   var b = b.category;
+                  //   if (a > b) {
+                  //     return -1;
+                  //   }
+                  //   if (a < b) {
+                  //     return 1;
+                  //   }
+                  //   return 0;
+                  // })
                   return;
                 }else{
                   if(currentVal.children.length > 0){

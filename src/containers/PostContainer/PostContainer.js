@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { PostWrapper, URLInput, Post, Search} from '../../components/index';
+import { PostWrapper, URLInput, Post, Search } from '../../components';
 
 
 
