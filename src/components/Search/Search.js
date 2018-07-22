@@ -80,7 +80,8 @@ class Search extends Component {
 
     editName (ev){
         
-        ev.target.parentElement.parentElement.parentElement.previousElementSibling.classList.remove("none")
+        ev.target.parentElement.parentElement.parentElement.previousElementSibling.classList.remove("none");
+        ev.target.parentElement.parentElement.parentElement.previousElementSibling.select();
         ev.target.parentElement.parentElement.parentElement.classList.add("none");
     }
 

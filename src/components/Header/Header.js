@@ -9,7 +9,7 @@ class Header extends Component {
     render() {
         return (
             <div className="Header">
-                <h2>Youtube Time Marker</h2>
+                <h2>YouTube Time Marker</h2>
                 <span className="settingIcon" onClick = {this.openSettingPage.bind(this)}><Icon name="setting" size="large" /></span>
             </div>
         );
