@@ -1,4 +1,4 @@
-# [YouTube Time Marker]
+# YouTube Time Marker
 
 # Introduction
 
