@@ -5,10 +5,10 @@ import Tree from '../Tree/Tree';
 function Folder(props) {
     return (
                 <List.Item draggable = "true">
-                    <List.Icon name='folder outline ' />
+                    <List.Icon name= {props.data.open ?'folder outline open' :'folder outline ' } />
                     <List.Content>
                         <input  className = "editInput none" defaultValue= {props.data.name} onKeyDown = {props.pushEnterFunction} onBlur = {props.inputBlur} autoFocus /> 
-                        <List.Header data-id = {props.data.id} onClick = {props.selectedFolder} onMouseEnter = {props.onHover} onMouseLeave = {props.offHover} onDoubleClick = {props.hideList}>
+                        <List.Header data-id = {props.data.id} onMouseEnter = {props.onHover} onMouseLeave = {props.offHover} onClick = {props.hideList}>
                             {props.data.name}
                             
                             {Number(props.selectedFolderId) === props.data.id ? (<Icon color = "red" name = "check circle" size= "small" data-id = {props.data.id}/>) : (<Icon name = "check circle" size= "small" data-id = {props.data.id}/>)}
@@ -28,11 +28,9 @@ function Folder(props) {
                             ? ""
                             : 
                             (<List.List className = {props.data.open || props.openedFolder.includes(props.data.id) ?"" :"none" }>
-                                {console.log(props.openedFolder)}
                                 <Tree 
                                     data = {props.data.children} 
                                     selectedFolderId = {props.selectedFolderId}
-                                    selectedFolder = {props.selectedFolder}
                                     onHover = {props.onHover}
                                     offHover = {props.offHover}
                                     folderEditBtn = {props.folderEditBtn}

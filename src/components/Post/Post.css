@@ -16,6 +16,9 @@
     width: 100%;
 }
 
+.forExpandWidth{
+    width: max-content;
+}
 
 .Post .ui.icon.button {
     background-color: #fff;

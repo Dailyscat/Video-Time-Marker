@@ -40,7 +40,6 @@ class App extends Component {
       addView: true,
       currentAddFolder:null,
     };
-
   }
 
   componentDidMount(){
@@ -78,7 +77,6 @@ class App extends Component {
           
         })  
         }
-          
       }
       closeFolder(result);
       this.setState({
@@ -104,8 +102,6 @@ class App extends Component {
       })
     }
   });  
-
-
 }   
 
 
@@ -116,7 +112,6 @@ class App extends Component {
       }else{
         function findFile(result) {
           result.children.map((currentVal, idx, arr) => {
-
               if(Number(currentId) === currentVal.id){
                 currentVal.name = editedName;
                 return;
@@ -205,7 +200,6 @@ class App extends Component {
       })
 
       var currentFolderId = this.state.selectedFolderId;
-      var currentCategory = this.state.category;
       chromeService.get(result => {      
         if(currentFolderId === "top"){
           result.children.push(
@@ -218,17 +212,6 @@ class App extends Component {
                 if(Number(this.state.selectedFolderId) === currentVal.id){
                   currentVal.children.push(this.state.file);
                   currentVal.open = true;
-                  // currentVal.children.sort(function(a, b) {
-                  //   var a = a.category;
-                  //   var b = b.category;
-                  //   if (a > b) {
-                  //     return -1;
-                  //   }
-                  //   if (a < b) {
-                  //     return 1;
-                  //   }
-                  //   return 0;
-                  // })
                   return;
                 }else{
                   if(currentVal.children.length > 0){

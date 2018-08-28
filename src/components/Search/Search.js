@@ -62,17 +62,15 @@ class Search extends Component {
     }
 
     addFolder (ev){
-
         if(ev.target.innerHTML === "Add Folder"){
         var selectedFolderId = ev.target.parentElement.parentElement.parentElement.dataset.id;
         this.props.addFolder(selectedFolderId);
-        if(!ev.currentTarget.parentElement.parentElement.parentElement.parentElement.previousElementSibling.classList.contains("open")){
-            if(ev.currentTarget.parentElement.parentElement.parentElement.nextElementSibling){
-                ev.currentTarget.parentElement.parentElement.parentElement.nextElementSibling.classList.remove("none")
-                ev.currentTarget.parentElement.parentElement.parentElement.parentElement.previousElementSibling.classList.add("open")
-            }else{
-                ev.currentTarget.parentElement.parentElement.parentElement.parentElement.previousElementSibling.classList.add("open")
-                
+            if(!ev.currentTarget.parentElement.parentElement.parentElement.parentElement.previousElementSibling.classList.contains("open")){
+                if(ev.currentTarget.parentElement.parentElement.parentElement.nextElementSibling){
+                    ev.currentTarget.parentElement.parentElement.parentElement.nextElementSibling.classList.remove("none")
+                    ev.currentTarget.parentElement.parentElement.parentElement.parentElement.previousElementSibling.classList.add("open")
+                }else{
+                    ev.currentTarget.parentElement.parentElement.parentElement.parentElement.previousElementSibling.classList.add("open")
                 }
             }
         }

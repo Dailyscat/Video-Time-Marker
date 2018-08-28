@@ -28,18 +28,54 @@ class Post extends Component {
         };
     }   
 
+    componentDidUpdate(){
+        var pregFolder = document.querySelector(`[data-id="${this.props.selectedFolderId}"]`);
 
-    
-    selectedFolder(ev){
-        if(ev.currentTarget.dataset){
-            this.props.selectedFolder(ev.currentTarget.dataset.id);
-        }else{
-            return "";
+        if(pregFolder.nextElementSibling && pregFolder.nextElementSibling.className !== "list none" ){
+            console.log(pregFolder);
+            console.log(pregFolder.nextElementSibling.lastElementChild)
+            var filePlacement = pregFolder.nextElementSibling.lastElementChild.getBoundingClientRect().y;
+            var scrollBottomTop = document.querySelector(".Post").scrollHeight - 328;
+
+            if(filePlacement < 120){
+                console.log("over");
+
+                document.querySelector(".Post").scrollTo({
+                    top: document.querySelector(".Post").scrollTop - Math.abs(filePlacement) -220,
+                    behavior: "smooth"
+                });
+            }
+
+            if(filePlacement > 421){
+                console.log("down")
+                document.querySelector(".Post").scrollTo({
+                    
+                    top: document.querySelector(".Post").scrollTop + filePlacement - 421,
+                    behavior: "smooth"
+                });
+            }
         }
-        this.setState({
-            selected: ev.currentTarget.dataset.id,
-            openedFolder:this.state.openedFolder.concat([ev.currentTarget.dataset.id])
-        });
+    }
+
+    hideList (ev) {
+        if(ev.target.className === "header"){
+            this.props.selectedFolder(ev.currentTarget.dataset.id);
+            if(ev.target.nextElementSibling){
+                ev.target.nextElementSibling.classList.toggle("none");
+                ev.target.parentElement.previousElementSibling.classList.toggle("open")
+                
+            }
+            if(!this.state.openedFolder.includes(ev.currentTarget.dataset.id)){
+                this.setState({
+                    selected: ev.currentTarget.dataset.id,
+                    openedFolder:this.state.openedFolder.concat([ev.currentTarget.dataset.id]),
+                })
+            }else{
+                this.setState({
+                    selected: ev.currentTarget.dataset.id,
+                });
+            }
+        }
     }
 
     onHover(ev){
@@ -51,7 +87,7 @@ class Post extends Component {
     }
 
     offHover(ev){
-        
+
         var button = ev.currentTarget.querySelector(".ui.icon.button");
         var segments = ev.currentTarget.querySelector(".ui.compact.segments");
 
@@ -70,13 +106,17 @@ class Post extends Component {
     }
 
     addFolder (ev){
-
         if(ev.target.innerHTML === "Add Folder"){
             var selectedFolderId = ev.target.parentElement.parentElement.parentElement.dataset.id;
-            this.setState({
-                selectedFolderId:selectedFolderId,
-                openedFolder:this.state.openedFolder.concat([selectedFolderId]),
-            })
+            if(!this.state.openedFolder.includes(selectedFolderId)){
+                this.setState({
+                    selectedFolderId:selectedFolderId,
+                    openedFolder:this.state.openedFolder.concat([selectedFolderId]),
+                })
+            }else{
+                this.setState({selectedFolderId:selectedFolderId});
+            }
+
             this.props.addFolder(selectedFolderId);
             if(!ev.currentTarget.parentElement.parentElement.parentElement.parentElement.previousElementSibling.classList.contains("open")){
                 if(ev.currentTarget.parentElement.parentElement.parentElement.nextElementSibling){
@@ -118,17 +158,6 @@ class Post extends Component {
         this.props.delete(ev.target.parentElement.parentElement.dataset.id);
     }
 
-    hideList (ev) {
-        if(ev.target.className === "header"){
-            if(ev.target.nextElementSibling){
-                ev.target.nextElementSibling.classList.toggle("none");
-                ev.target.parentElement.previousElementSibling.classList.toggle("open")
-                
-            }
-            this.setState({openedFolder:this.state.openedFolder.concat([ev.currentTarget.dataset.id])})
-        }
-    }
-
     moveToUrl (ev) {
         this.props.moveToUrl(ev.currentTarget.dataset.url);
     }
@@ -143,12 +172,13 @@ class Post extends Component {
         return (
             <div className="Post">
                 <List >
-                <List.Item>
+                <List.Item className = "forExpandWidth">
                     <List.Icon name='folder open' />
                     <List.Content>
                         <input  className = "editInput none" defaultValue = {this.props.defaultFolderName} onKeyDown = {this.pushEnterFunction.bind(this)} onBlur = {this.inputBlur.bind(this)} autoFocus/> 
-                        <List.Header className="topOfTopFolder" data-id = {"top"} onClick = {this.selectedFolder.bind(this)} onMouseEnter = {this.onHover.bind(this)} onMouseLeave = {this.offHover.bind(this)} onDoubleClick = {this.hideList.bind(this)}>
+                        <List.Header data-id = {"top"} onClick = {this.hideList.bind(this)} onMouseEnter = {this.onHover.bind(this)} onMouseLeave = {this.offHover.bind(this)} >
                             {this.props.defaultFolderName}
+                            {console.log(this.props.selectedFolderId)}
                             {this.props.selectedFolderId === this.state.defaultSelected ? <Icon color = "red" name = "check circle" size= "small" data-id = "top"/> : <Icon name = "check circle" size= "small" data-id = "top"/>}
                                 <Fragment>                           
                                     <Button icon  color="white" className = "hidden" data-id = "top" > 
@@ -165,7 +195,6 @@ class Post extends Component {
                         
                             data = {this.props.data}
                             selectedFolderId = {this.props.selectedFolderId}
-                            selectedFolder = {this.selectedFolder.bind(this)}
                             onHover = {this.onHover.bind(this)}
                             offHover = {this.offHover.bind(this)}
                             folderEditBtn = {this.folderEditBtn.bind(this)}

@@ -13,7 +13,6 @@ function Tree (props){
                             return (<File 
                                         data = {currentVal} 
                                         selectedFolderId = {props.selectedFolderId}
-                                        selectedFolder = {props.selectedFolder}
                                         onHover = {props.onHover}
                                         offHover = {props.offHover}
                                         folderEditBtn = {props.folderEditBtn}
@@ -31,7 +30,6 @@ function Tree (props){
                             return (<Folder
                                 data = {currentVal} 
                                 selectedFolderId = {props.selectedFolderId}
-                                selectedFolder = {props.selectedFolder}
                                 onHover = {props.onHover}
                                 offHover = {props.offHover}
                                 folderEditBtn = {props.folderEditBtn}
