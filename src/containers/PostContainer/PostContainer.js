@@ -24,7 +24,12 @@ class PostContainer extends Component {
                     receiveEditedName = {this.props.receiveEditedName.bind(this)}
                     delete = {this.props.delete.bind(this)}
                     moveToUrl = {this.props.moveToUrl.bind(this)}
-                    currentAddFolder = {this.props.currentAddFolder}
+                    currentAddThing = {this.props.currentAddThing}
+                    dragStart = {this.props.dragStart.bind(this)}
+                    dragOver = {this.props.dragOver.bind(this)}
+                    drop = {this.props.drop.bind(this)}
+                    dragLeave = {this.props.dragLeave.bind(this)}
+                    dragEnter = {this.props.dragEnter.bind(this)}
                 />
                 :
                     <Search
@@ -36,7 +41,7 @@ class PostContainer extends Component {
                         receiveEditedName = {this.props.receiveEditedName.bind(this)}
                         delete = {this.props.delete.bind(this)}
                         moveToUrl = {this.props.moveToUrl.bind(this)}
-                        currentAddFolder = {this.props.currentAddFolder}
+                        currentAddThing = {this.props.currentAddThing}
                     />
                 }
             </PostWrapper>

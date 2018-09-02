@@ -1,9 +1,13 @@
 import { List, Button, Icon, Segment } from 'semantic-ui-react'
-import React, { Component, Fragment } from 'react';
+import React, { Fragment } from 'react';
 
 function File(props) {
+    var dragStart = (ev) => {
+
+        props.dragStart(ev,ev.target.lastElementChild.lastElementChild.dataset.id);
+    }
     return (
-            <List.Item draggable = "true">
+            <List.Item draggable = "true" onDragStart = {dragStart}>
             <List.Icon name='file video ' color = "black" />
                 <List.Content>
                     <input  className = "editInput none" defaultValue = {props.data.name} onKeyDown = {props.pushEnterFunction} onBlur = {props.inputBlur} autoFocus  /> 

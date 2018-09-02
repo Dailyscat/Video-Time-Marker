@@ -23,7 +23,7 @@ function Tree (props){
                                         delete = {props.delete}
                                         moveToUrl = {props.moveToUrl}
                                         copyUrl = {props.copyUrl}
-                                        
+                                        dragStart = {props.dragStart}
                                     />);
                         }
                         if(currentVal.category === "folder"){
@@ -41,8 +41,13 @@ function Tree (props){
                                 hideList = {props.hideList}
                                 moveToUrl = {props.moveToUrl}
                                 copyUrl = {props.copyUrl}
-                                currentAddFolder = {props.currentAddFolder}
+                                currentAddThing = {props.currentAddThing}
                                 openedFolder = {props.openedFolder}
+                                dragStart = {props.dragStart}
+                                dragOver = {props.dragOver}
+                                drop = {props.drop}
+                                dragLeave = {props.dragLeave}
+                                dragEnter = {props.dragEnter}
                             />);
                         }
                     })

@@ -149,7 +149,7 @@ class Search extends Component {
                         hideList = {this.hideList.bind(this)}
                         moveToUrl = {this.moveToUrl.bind(this)}
                         copyUrl = {this.copyUrl.bind(this)}
-                        currentAddFolder = {this.props.currentAddFolder}
+                        currentAddThing = {this.props.currentAddThing}
                         openedFolder = {this.state.openedFolder}
                     />)
                     }

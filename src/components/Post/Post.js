@@ -28,53 +28,66 @@ class Post extends Component {
         };
     }   
 
-    componentDidUpdate(){
-        var pregFolder = document.querySelector(`[data-id="${this.props.selectedFolderId}"]`);
+    componentDidUpdate(prevProps){
+        if(prevProps.currentAddThing !== this.props.currentAddThing){
+            var pregFolder = document.querySelector(`[data-id="${this.props.selectedFolderId}"]`);
 
-        if(pregFolder.nextElementSibling && pregFolder.nextElementSibling.className !== "list none" ){
-            console.log(pregFolder);
-            console.log(pregFolder.nextElementSibling.lastElementChild)
-            var filePlacement = pregFolder.nextElementSibling.lastElementChild.getBoundingClientRect().y;
-            var scrollBottomTop = document.querySelector(".Post").scrollHeight - 328;
-
-            if(filePlacement < 120){
-                console.log("over");
-
-                document.querySelector(".Post").scrollTo({
-                    top: document.querySelector(".Post").scrollTop - Math.abs(filePlacement) -220,
-                    behavior: "smooth"
-                });
+            if(!pregFolder.parentElement.previousElementSibling.classList.contains("open")){
+                if(pregFolder.nextElementSibling){
+                    pregFolder.nextElementSibling.classList.remove("none");
+                    pregFolder.parentElement.previousElementSibling.classList.add("open")
+                }else{
+                    pregFolder.parentElement.previousElementSibling.classList.add("open")
+                }
             }
+            if(pregFolder.nextElementSibling && pregFolder.nextElementSibling.className !== "list none" ){
+                if(pregFolder.nextElementSibling.lastElementChild){
+                    var filePlacement = pregFolder.nextElementSibling.lastElementChild.getBoundingClientRect().y;
+                    var scrollBottomTop = document.querySelector(".Post").scrollHeight - 328;
 
-            if(filePlacement > 421){
-                console.log("down")
-                document.querySelector(".Post").scrollTo({
-                    
-                    top: document.querySelector(".Post").scrollTop + filePlacement - 421,
-                    behavior: "smooth"
-                });
+                    if(filePlacement < 120){
+                        document.querySelector(".Post").scrollTo({
+                            top: document.querySelector(".Post").scrollTop - Math.abs(filePlacement) -220,
+                            behavior: "smooth"
+                        });
+                    }
+        
+                    if(filePlacement > 421){
+                        document.querySelector(".Post").scrollTo({
+                            top: document.querySelector(".Post").scrollTop + filePlacement - 402,
+                            behavior: "smooth"
+                        });
+                    }
+                }else{
+                    return "";
+                }
+
+            }else{
+                return "";
             }
         }
+
+        
     }
 
     hideList (ev) {
         if(ev.target.className === "header"){
-            this.props.selectedFolder(ev.currentTarget.dataset.id);
             if(ev.target.nextElementSibling){
                 ev.target.nextElementSibling.classList.toggle("none");
                 ev.target.parentElement.previousElementSibling.classList.toggle("open")
                 
             }
-            if(!this.state.openedFolder.includes(ev.currentTarget.dataset.id)){
-                this.setState({
-                    selected: ev.currentTarget.dataset.id,
-                    openedFolder:this.state.openedFolder.concat([ev.currentTarget.dataset.id]),
-                })
-            }else{
-                this.setState({
-                    selected: ev.currentTarget.dataset.id,
-                });
-            }
+        }
+        this.props.selectedFolder(ev.currentTarget.dataset.id);
+        if(!this.state.openedFolder.includes(ev.currentTarget.dataset.id)){
+            this.setState({
+                selected: ev.currentTarget.dataset.id,
+                openedFolder:this.state.openedFolder.concat([ev.currentTarget.dataset.id]),
+            })
+        }else{
+            this.setState({
+                selected: ev.currentTarget.dataset.id,
+            });
         }
     }
 
@@ -118,15 +131,6 @@ class Post extends Component {
             }
 
             this.props.addFolder(selectedFolderId);
-            if(!ev.currentTarget.parentElement.parentElement.parentElement.parentElement.previousElementSibling.classList.contains("open")){
-                if(ev.currentTarget.parentElement.parentElement.parentElement.nextElementSibling){
-                    ev.currentTarget.parentElement.parentElement.parentElement.nextElementSibling.classList.remove("none")
-                    ev.currentTarget.parentElement.parentElement.parentElement.parentElement.previousElementSibling.classList.add("open")
-                }else{
-                    ev.currentTarget.parentElement.parentElement.parentElement.parentElement.previousElementSibling.classList.add("open")
-                    
-                }
-            }
         }
     }
 
@@ -156,6 +160,9 @@ class Post extends Component {
 
     delete (ev) {
         this.props.delete(ev.target.parentElement.parentElement.dataset.id);
+        if(ev.target.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.className !== "default" && ev.target.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.children.length === 1){
+            ev.target.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.previousElementSibling.classList.remove("open")
+        }
     }
 
     moveToUrl (ev) {
@@ -168,6 +175,26 @@ class Post extends Component {
         document.execCommand("copy");
         ev.target.previousElementSibling.classList.add("none");
     }
+
+    dragOver = (ev) => {
+        ev.preventDefault();
+        this.props.dragOver(ev);
+    }
+
+    drop = (ev) => {
+        if(ev.target.parentElement.previousElementSibling.dataset.id === "top"){
+            this.props.drop(ev, ev.target.dataset.id );
+        }
+    }
+
+    dragLeave = (ev) => {
+        this.props.dragLeave(ev);
+    }
+
+    dragEnter = (ev) => {
+        this.props.dragEnter(ev);
+    }
+    
     render() {
         return (
             <div className="Post">
@@ -176,9 +203,8 @@ class Post extends Component {
                     <List.Icon name='folder open' />
                     <List.Content>
                         <input  className = "editInput none" defaultValue = {this.props.defaultFolderName} onKeyDown = {this.pushEnterFunction.bind(this)} onBlur = {this.inputBlur.bind(this)} autoFocus/> 
-                        <List.Header data-id = {"top"} onClick = {this.hideList.bind(this)} onMouseEnter = {this.onHover.bind(this)} onMouseLeave = {this.offHover.bind(this)} >
+                        <List.Header className = "default" data-id = {"top"} onClick = {this.hideList.bind(this)} onMouseEnter = {this.onHover.bind(this)} onMouseLeave = {this.offHover.bind(this)} >
                             {this.props.defaultFolderName}
-                            {console.log(this.props.selectedFolderId)}
                             {this.props.selectedFolderId === this.state.defaultSelected ? <Icon color = "red" name = "check circle" size= "small" data-id = "top"/> : <Icon name = "check circle" size= "small" data-id = "top"/>}
                                 <Fragment>                           
                                     <Button icon  color="white" className = "hidden" data-id = "top" > 
@@ -190,7 +216,7 @@ class Post extends Component {
                                     </Button>
                                 </Fragment>
                         </List.Header>
-                        <List.List>
+                        <List.List onDragOver={this.dragOver.bind(this)} onDrop={this.drop.bind(this)} onDragLeave = {this.dragLeave.bind(this)} onDragEnter = {this.dragEnter.bind(this)}>
                         <Tree 
                         
                             data = {this.props.data}
@@ -206,8 +232,13 @@ class Post extends Component {
                             hideList = {this.hideList.bind(this)}
                             moveToUrl = {this.moveToUrl.bind(this)}
                             copyUrl = {this.copyUrl.bind(this)}
-                            currentAddFolder = {this.props.currentAddFolder}
+                            currentAddThing = {this.props.currentAddThing}
                             openedFolder = {this.state.openedFolder}
+                            dragStart = {this.props.dragStart.bind(this)}
+                            dragOver = {this.props.dragOver.bind(this)}
+                            drop = {this.props.drop.bind(this)}
+                            dragLeave = {this.props.dragLeave.bind(this)}
+                            dragEnter = {this.props.dragEnter.bind(this)}
                         />
                         </List.List>
                     </List.Content>  

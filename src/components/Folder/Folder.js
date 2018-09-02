@@ -3,8 +3,31 @@ import React, { Fragment } from 'react';
 import Tree from '../Tree/Tree';
 
 function Folder(props) {
+
+    var dragStart = (ev) => {
+        props.dragStart(ev, ev.target.lastElementChild.children[1].dataset.id);
+    }
+
+    var dragOver = (ev) => {
+        ev.preventDefault();
+        props.dragOver(ev);
+    }
+
+    var drop = (ev, cat) => {
+        if(ev.target.className === "header"){
+            props.drop(ev,ev.target.dataset.id);
+        }
+    }
+
+    var dragLeave = (ev) => {
+        props.dragLeave(ev);
+    }
+
+    var dragEnter = (ev) => {
+        props.dragEnter(ev);
+    }
     return (
-                <List.Item draggable = "true">
+                <List.Item draggable onDragStart = {dragStart} onDragOver = {dragOver} onDrop = {drop}  onDragLeave = {dragLeave} onDragEnter = {dragEnter} >
                     <List.Icon name= {props.data.open ?'folder outline open' :'folder outline ' } />
                     <List.Content>
                         <input  className = "editInput none" defaultValue= {props.data.name} onKeyDown = {props.pushEnterFunction} onBlur = {props.inputBlur} autoFocus /> 
@@ -42,8 +65,13 @@ function Folder(props) {
                                     hideList = {props.hideList}
                                     moveToUrl = {props.moveToUrl}
                                     copyUrl = {props.copyUrl}
-                                    currentAddFolder = {props.currentAddFolder}
+                                    currentAddThing = {props.currentAddThing}
                                     openedFolder = {props.openedFolder}
+                                    dragStart = {props.dragStart}
+                                    dragOver = {props.dragOver}
+                                    drop = {props.drop}
+                                    dragLeave = {props.dragLeave}
+                                    dragEnter = {props.dragEnter}
                                 />
                             </List.List>)
                         }

@@ -25,7 +25,7 @@ class URLInput extends Component {
     }
 
     setTimeMarker(){
-        this.props.setTimeMarker(this.state.markName);
+        if(this.state.markName)this.props.setTimeMarker(this.state.markName);
         this.setState({
             markName: ''
         });

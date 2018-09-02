@@ -38,7 +38,7 @@ class App extends Component {
       settingPageOpen : false,
       filteredArr: [],
       addView: true,
-      currentAddFolder:null,
+      currentAddThing:null,
     };
   }
 
@@ -149,8 +149,8 @@ class App extends Component {
 
   addFolder(selectedFolderId){
     chromeService.get(result => {
+      const folderCopy = Object.assign({}, this.state.folder);
       if(selectedFolderId === "top") {
-        const folderCopy = Object.assign({}, this.state.folder);
         folderCopy.id = Date.now();
         result.children.push(folderCopy);
       }else{
@@ -158,9 +158,7 @@ class App extends Component {
           result.children.map((currentVal, idx, arr) => {
             if(currentVal.category === "folder"){
               if(Number(selectedFolderId) === currentVal.id){
-                const folderCopy = Object.assign({}, this.state.folder);
                 folderCopy.id = Date.now();
-                this.setState({currentAddFolder:folderCopy.id})
                 currentVal.children.push(folderCopy);
                 currentVal.open = true;
                 return;
@@ -182,7 +180,8 @@ class App extends Component {
         defaultFolder: {
           ...this.state.defaultFolder,
           children:result.children,
-        }
+        },
+        currentAddThing: folderCopy.id,
       });
       chromeService.set({children: result.children})
     })
@@ -196,7 +195,8 @@ class App extends Component {
           id: Date.now(),
           name:name,
           url:`https://youtu.be/`+ this.state.videoId + `?t=`+ result[0],
-        }
+        },
+        currentAddThing: Date.now(),
       })
 
       var currentFolderId = this.state.selectedFolderId;
@@ -339,7 +339,33 @@ class App extends Component {
     }
 
   }
+  
+  
+  dragStart = (ev, id) => {
+    ev.dataTransfer.setData("text/html", id);
+    ev.dataTransfer.effectAllowed = 'copy';
+  }
 
+  dragEnter = (ev) => {
+
+    if(ev.currentTarget.className === "item")ev.target.style.border = 'red 1px solid'
+  }
+
+  dragLeave = (ev) => {
+
+    if(ev.currentTarget.className === "item")ev.target.style.border = ''
+  }
+
+
+
+  dragOver = (ev) => {
+    ev.preventDefault();
+  }
+
+  drop = (ev, dropListId) => {
+    let id = ev.dataTransfer.getData("text/html");
+    ev.target.style.border = '' 
+  }
 
   render() {
     return (
@@ -360,7 +386,12 @@ class App extends Component {
           filteredArr = {this.state.filteredArr}
           changeView = {this.changeView.bind(this)}
           changePostView = {this.state.addView}
-          currentAddFolder = {this.state.currentAddFolder}
+          currentAddThing = {this.state.currentAddThing}
+          dragStart = {this.dragStart.bind(this)}
+          dragOver = {this.dragOver.bind(this)}
+          drop = {this.drop.bind(this)}
+          dragLeave = {this.dragLeave.bind(this)}
+          dragEnter = {this.dragEnter.bind(this)}
         />
         <SettingPage
           userSetting = {this.userSetting.bind(this)}
