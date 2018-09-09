@@ -31,6 +31,7 @@ class App extends Component {
         name: null,
         url: null,
       },
+      currentTime: 0,
       selectedFolderId : "top",
       inYoutube: false,
       category : null,
@@ -60,6 +61,12 @@ class App extends Component {
       });
     });
 
+    chromeService.currentTime((result) => {
+      this.setState({
+        currentTime:result[0],
+      })
+    });
+    
     chromeService.get(result => {
       function closeFolder (result){
         if(result.children){
@@ -78,6 +85,7 @@ class App extends Component {
         })  
         }
       }
+
       closeFolder(result);
       this.setState({
         defaultFolder: {
@@ -188,13 +196,12 @@ class App extends Component {
   }
 
   setTimeMarker(name){
-    chromeService.currentTime((result) => {
       this.setState({
         file: {
           ...this.state.file,
           id: Date.now(),
           name:name,
-          url:`https://youtu.be/`+ this.state.videoId + `?t=`+ result[0],
+          url:`https://youtu.be/`+ this.state.videoId + `?t=`+ this.state.currentTime,
         },
         currentAddThing: Date.now(),
       })
@@ -235,7 +242,6 @@ class App extends Component {
           }
         })
       });
-    });
   }
 
   delete(currentId){
@@ -342,29 +348,188 @@ class App extends Component {
   
   
   dragStart = (ev, id) => {
-    ev.dataTransfer.setData("text/html", id);
-    ev.dataTransfer.effectAllowed = 'copy';
+    if(id){
+      ev.dataTransfer.setData("text/html", id);
+      ev.dataTransfer.effectAllowed = 'move';
+      this.dragStartNode = ev.currentTarget;
+
+    } 
   }
 
-  dragEnter = (ev) => {
-
-    if(ev.currentTarget.className === "item")ev.target.style.border = 'red 1px solid'
+  dragEnter = (ev, category) => {
+    ev.preventDefault();
+    ev.stopPropagation();
+    if(ev.target.className === "header" && category === "folder") {
+      ev.target.parentElement.parentElement.style.background = "#ffbdbd";
+    }
+    if(ev.target.className === "item") {
+      this.over = ev.target;
+      var relY = ev.clientY - this.over.offsetTop;
+      var height = this.over.offsetHeight / 2;
+      var parent = ev.target.parentNode;
+      if(relY > height) {
+        ev.target.style.borderBottom = "2px #a99696 dashed";
+        this.nodePlacement = "after";
+      }else if(relY < height) {
+        ev.target.style.borderTop = "2px #a99696 dashed";
+        this.nodePlacement = "before"
+      }
+    }
   }
 
-  dragLeave = (ev) => {
-
-    if(ev.currentTarget.className === "item")ev.target.style.border = ''
+  dragLeave = (ev,category) => {
+    ev.preventDefault();
+    ev.stopPropagation();
+    if(ev.target.className === "header" && category === "folder"){
+      // this.dragged.style.display = "none";
+      ev.target.parentElement.parentElement.style.background = "";
+    } 
+    if(ev.target.className === "item") {
+      // this.dragged.style.display = "none";
+      var relY = ev.clientY - this.over.offsetTop;
+      var height = this.over.offsetHeight / 2;
+      var parent = ev.target.parentNode;
+  
+      if(relY > height) {
+        ev.target.style.borderBottom = "";
+        ev.target.style.borderTop = "";
+        this.nodePlacement = "after";
+      }else if(relY < height) {
+        ev.target.style.borderBottom = "";
+        ev.target.style.borderTop = "";
+        this.nodePlacement = "before"
+      }
+    }
   }
-
-
 
   dragOver = (ev) => {
     ev.preventDefault();
+    
   }
 
-  drop = (ev, dropListId) => {
-    let id = ev.dataTransfer.getData("text/html");
-    ev.target.style.border = '' 
+  drop = (ev,category) => {
+
+    let dragStartId = ev.dataTransfer.getData("text/html");
+    let dragStartObj;
+    let dragDropArr;
+    let dropIdx;
+    let dragDropId;
+    let dragStartUpperContainer;
+    let target = ev.target.className;
+    let up = false;
+
+    
+    if(dragStartId === ev.currentTarget.lastElementChild.lastElementChild.dataset.id) return;
+    if(target === "header" && category === "folder"){
+      ev.target.parentElement.parentElement.style.background = "";
+      dragDropId = ev.target.dataset.id;
+
+    } 
+    if(target === "item") {
+      dragDropId = ev.target.childNodes[1].childNodes[1].dataset.id;
+      var relY = ev.clientY - this.over.offsetTop;
+      var height = this.over.offsetHeight / 2;
+      var parent = ev.target.parentNode;
+      if(relY > height) {
+        ev.target.style.borderBottom = "";
+        this.nodePlacement = "after";
+        // parent.insertBefore(this.dragged, ev.target.nextElementSibling);
+      }else if(relY < height) {
+        ev.target.style.borderTop = "";
+        this.nodePlacement = "before"
+        up = true;
+        // parent.insertBefore(this.dragged, ev.target);
+      }
+    }
+
+    chromeService.get((result) => {
+      findDragStart(result);
+      findDragDrop(result);
+      if(dragDropArr === undefined) return ;
+      if( target === "header" ) {
+        dragDropArr.push(dragStartObj);
+      }else if ( target === "item" ) {
+        if(up){
+          dragDropArr.splice(dropIdx,0,dragStartObj);
+          up = false;
+        }else{
+          if(dragDropArr.length - 1 === dropIdx){
+            dragDropArr.push(dragStartObj);
+          }else{
+            dragDropArr.splice(dropIdx + 1,0,dragStartObj);
+          }
+        }
+      }
+
+      chromeService.set({children: result.children})
+      this.setState({
+        defaultFolder: {
+          ...this.state.defaultFolder,
+          children:result.children,
+        }
+      })
+    })
+
+    function findDragStart (result){
+      
+      result.children.map((currentVal, idx, arr) => {
+
+        if(currentVal.id === Number(dragStartId)){
+          dragStartObj = currentVal;
+          arr.splice(idx,1)
+          if(arr.length){
+            result.open = true;
+          }else{
+            result.open = false;
+          }
+
+          // if(!arr.length) dragStartUpperContainer.open = false;
+          return;
+        }else{
+          if(currentVal.category === "folder"){
+            if(currentVal.children.length > 0){
+              findDragStart.call(this,currentVal);
+            }else{
+              return "";
+            }
+          }else{
+            return "";
+          }
+        }
+      })
+    }
+
+    function findDragDrop (result){
+      
+      result.children.map((currentVal, idx, arr) => {
+
+        if(currentVal.id === Number(dragDropId)){
+          if(target === "header"){
+            dragDropArr = currentVal.children;
+            
+          }else{
+            dragDropArr = arr;
+            dropIdx = idx;
+          }
+          return;
+        }else{
+          if(currentVal.category === "folder"){
+            if(currentVal.children.length > 0){
+              findDragDrop.call(this,currentVal);
+            }else{
+              return "";
+            }
+          }else{
+            return "";
+          }
+        }
+      })
+    }
+
+
+
+    
+    // ev.target.parentElement.parentElement.style.border = ''
   }
 
   render() {

@@ -29,8 +29,13 @@ class Post extends Component {
     }   
 
     componentDidUpdate(prevProps){
+        var pregFolder = document.querySelector(`[data-id="${this.props.selectedFolderId}"]`);
+        if(!pregFolder) return;
+        if(pregFolder.parentElement.previousElementSibling.classList.contains("open") && !pregFolder.nextElementSibling){
+            pregFolder.parentElement.previousElementSibling.classList.remove("open")
+        }
+
         if(prevProps.currentAddThing !== this.props.currentAddThing){
-            var pregFolder = document.querySelector(`[data-id="${this.props.selectedFolderId}"]`);
 
             if(!pregFolder.parentElement.previousElementSibling.classList.contains("open")){
                 if(pregFolder.nextElementSibling){
@@ -40,6 +45,9 @@ class Post extends Component {
                     pregFolder.parentElement.previousElementSibling.classList.add("open")
                 }
             }
+
+
+
             if(pregFolder.nextElementSibling && pregFolder.nextElementSibling.className !== "list none" ){
                 if(pregFolder.nextElementSibling.lastElementChild){
                     var filePlacement = pregFolder.nextElementSibling.lastElementChild.getBoundingClientRect().y;
@@ -66,8 +74,6 @@ class Post extends Component {
                 return "";
             }
         }
-
-        
     }
 
     hideList (ev) {
@@ -93,7 +99,7 @@ class Post extends Component {
 
     onHover(ev){
         if(ev.currentTarget.className.includes("header")){
-            ev.currentTarget.children[1].classList.remove("hidden")
+            ev.currentTarget.children[1].classList.remove("none")
         }else{
             return ""
         }
@@ -104,18 +110,18 @@ class Post extends Component {
         var button = ev.currentTarget.querySelector(".ui.icon.button");
         var segments = ev.currentTarget.querySelector(".ui.compact.segments");
 
-        if (button == ev.target) {
-            button.classList.add("hidden");
+        if (button === ev.target) {
+            button.classList.add("none");
             return;
         }
 
-        button.classList.add("hidden");
-        segments.classList.add("hidden");
-        }
+        button.classList.add("none");
+        segments.classList.add("none");
+    }
 
 
     folderEditBtn (ev){
-        ev.target.nextElementSibling.classList.toggle("hidden");
+        ev.target.nextElementSibling.classList.toggle("none");
     }
 
     addFolder (ev){
@@ -174,6 +180,8 @@ class Post extends Component {
         ev.target.previousElementSibling.select();
         document.execCommand("copy");
         ev.target.previousElementSibling.classList.add("none");
+        ev.target.parentElement.classList.add("none");
+        ev.target.parentElement.parentElement.classList.add("none");
     }
 
     dragOver = (ev) => {
@@ -183,7 +191,7 @@ class Post extends Component {
 
     drop = (ev) => {
         if(ev.target.parentElement.previousElementSibling.dataset.id === "top"){
-            this.props.drop(ev, ev.target.dataset.id );
+            this.props.drop(ev, "folder");
         }
     }
 
@@ -207,16 +215,16 @@ class Post extends Component {
                             {this.props.defaultFolderName}
                             {this.props.selectedFolderId === this.state.defaultSelected ? <Icon color = "red" name = "check circle" size= "small" data-id = "top"/> : <Icon name = "check circle" size= "small" data-id = "top"/>}
                                 <Fragment>                           
-                                    <Button icon  color="white" className = "hidden" data-id = "top" > 
+                                    <Button icon  color="white" className = "none" data-id = "top" > 
                                         <Icon size="small" name="ellipsis horizontal" onClick = {this.folderEditBtn.bind(this)} data-id = "top"/>
-                                            <Segment.Group compact className = "hidden" >
+                                            <Segment.Group compact className = "none" >
                                                 <Segment textAlign="center" onClick = {this.addFolder.bind(this)}>Add Folder</Segment>
                                                 <Segment textAlign="center" onClick = {this.editName.bind(this)}>Edit Name</Segment>
                                             </Segment.Group>
                                     </Button>
                                 </Fragment>
                         </List.Header>
-                        <List.List onDragOver={this.dragOver.bind(this)} onDrop={this.drop.bind(this)} onDragLeave = {this.dragLeave.bind(this)} onDragEnter = {this.dragEnter.bind(this)}>
+                        <List.List onDrop={this.drop.bind(this)}>
                         <Tree 
                         
                             data = {this.props.data}

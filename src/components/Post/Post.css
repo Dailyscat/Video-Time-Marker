@@ -9,6 +9,10 @@
     width: 372px;
 }
 
+.Post .ui.list .list>.item {
+    padding: 3px 0px;
+}
+
 .header{
     cursor:pointer;
 }
@@ -85,10 +89,17 @@ i.check.circle.small.icon{
     visibility: hidden;
 }
 
-.none{
+i.ellipsis.horizontal.small.icon.none{
     display: none;
 }
 
+.ui.compact.segments.none{
+    display: none;
+}
+
+button.ui.white.icon.button.none{
+    display: none;
+}
 .editInput {
     height:22px;
 }
