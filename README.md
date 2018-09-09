@@ -33,10 +33,14 @@ npm start
 - 폴더를 이용하여 분류가능
 - 파일과 폴더의 **CRUD**(Create, Read, Update, Delete) 가능
 - **Chrome Sync Storage**를 활용하여 계정 자체에 데이터를 저장 
-- **DB**가 계정에 저장되어있으므로 다른 기기에서도 **Extension Data** 사용 가능
+- **New Tab** Or **Current Tab** **Setting**가능
 - **Tree View**를 이용하여 직관적인 데이터 관리 가능
 - **Search** 버튼 클릭으로 데이터 검색 가능 
 - **Marking**한 파일의 **Url** **Clip Board**에 복사 가능  
+- 추가한 **File**이 시야에 없을 때 자동으로 **Scrolling**
+- **Drag And Drop**을 활용한 **Custom Sort**
+- **Marking**한 **File**의 **URL**복사 가능
+
 
 
 ## Client-Side
@@ -48,16 +52,16 @@ npm start
 
 ## Server-Side
 
-- Chrome Sync Storage 사용
+- Chrome Local Storage 사용
 
 
 ## Things to do
 
 
-- Drag And Drop 구현
+- Drag And Drop 구현(Complete)
+- 전체적인 UX 개선(Complete)
+- 버그해결(Complete)
 - Redux 추가하여 Flux 아키텍처 기반 설계
-- 전체적인 UX 개선
-- 버그해결
 
 ## Team Members
 

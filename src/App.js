@@ -41,9 +41,6 @@ class App extends Component {
       addView: true,
       currentAddThing:null,
     };
-  }
-
-  componentDidMount(){
 
     chromeService.initialDB(result => { 
       if(result === 0){
@@ -66,6 +63,15 @@ class App extends Component {
         currentTime:result[0],
       })
     });
+
+    chromeService.videoId((result) => {
+      if(result[0]){
+        this.setState({
+          videoId : result[0],
+          inYoutube: true,
+        })
+      }
+    });  
     
     chromeService.get(result => {
       function closeFolder (result){
@@ -96,20 +102,20 @@ class App extends Component {
       chromeService.set({children: result.children})
     })
 
+    
+
+  }
+
+  componentDidMount(){
+
+
+
     chromeService.onLoadHandler((tabId, changeInfo, tab) =>{
         if(changeInfo.status == "loading") {
                 window.close();
         }
     })
 
-  chromeService.videoId((result) => {
-    if(result[0]){
-      this.setState({
-        videoId : result[0],
-        inYoutube: true,
-      })
-    }
-  });  
 }   
 
 
@@ -482,7 +488,6 @@ class App extends Component {
           }else{
             result.open = false;
           }
-
           // if(!arr.length) dragStartUpperContainer.open = false;
           return;
         }else{
@@ -510,6 +515,7 @@ class App extends Component {
           }else{
             dragDropArr = arr;
             dropIdx = idx;
+            result.open = true;
           }
           return;
         }else{

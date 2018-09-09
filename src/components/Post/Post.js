@@ -60,7 +60,7 @@ class Post extends Component {
                         });
                     }
         
-                    if(filePlacement > 421){
+                    if(filePlacement > 411){
                         document.querySelector(".Post").scrollTo({
                             top: document.querySelector(".Post").scrollTop + filePlacement - 402,
                             behavior: "smooth"

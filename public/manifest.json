@@ -11,5 +11,15 @@
       "default_popup": "index.html",
       "default_icon": "youtubeTimeMakerIcon.png"
     },
+    "commands": {
+      "_execute_browser_action": {
+        "suggested_key": {
+          "default": "Ctrl+Shift+V",
+          "linux": "Ctrl+Shift+V",
+          "windows": "Ctrl+Shift+V",
+          "mac": "Command+Shift+V"
+        }
+      }
+    },
     "manifest_version": 2
   }

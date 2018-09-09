@@ -28,21 +28,21 @@ const videoId = (cb) => {
 }
 
 const set = (obj,cb) => {
-    chrome.storage.sync.set(obj,cb)
+    chrome.storage.local.set(obj,cb)
 }
 
 const get = (cb) => {
-    chrome.storage.sync.get(null, result => {
+    chrome.storage.local.get(null, result => {
         cb(result);
     })
 }
 
 const remove = (obj,cb) => {
-    chrome.storage.sync.remove(obj,cb)
+    chrome.storage.local.remove(obj,cb)
 }
 
 const initialDB = (cb) => {
-    chrome.storage.sync.getBytesInUse(cb);
+    chrome.storage.local.getBytesInUse(cb);
 }
 
 const newTab = (urlObj, cb) => {

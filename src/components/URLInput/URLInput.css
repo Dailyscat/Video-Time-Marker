@@ -70,3 +70,8 @@ a:active, a:hover {
 .ui.input.none{
     display: none;
 }
+
+.search .ui.tag.label.label{
+    width: 68px;
+    padding-left: 17px;
+}
