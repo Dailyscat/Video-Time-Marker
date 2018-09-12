@@ -32,7 +32,7 @@ npm start
 - 시청하던 **YouTube Video**의 시간을 이름과 함께 저장 
 - 폴더를 이용하여 분류가능
 - 파일과 폴더의 **CRUD**(Create, Read, Update, Delete) 가능
-- **Chrome Sync Storage**를 활용하여 계정 자체에 데이터를 저장 
+- **Chrome Local Storage**를 데이터를 저장 
 - **New Tab** Or **Current Tab** **Setting**가능
 - **Tree View**를 이용하여 직관적인 데이터 관리 가능
 - **Search** 버튼 클릭으로 데이터 검색 가능 
@@ -40,6 +40,7 @@ npm start
 - 추가한 **File**이 시야에 없을 때 자동으로 **Scrolling**
 - **Drag And Drop**을 활용한 **Custom Sort**
 - **Marking**한 **File**의 **URL**복사 가능
+
 
 
 
