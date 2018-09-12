@@ -1,30 +1,47 @@
 /* global chrome */
-// chrome.browserAction.onClicked.addListener(function(tab) {
 
-// }); 
+const getCurrentTime = 
+    `(function () {
+        if(document.getElementsByTagName("video")[0]) return parseInt(document.getElementsByTagName("video")[0].currentTime);
+    })();`
 
 const currentTime = (cb) => {
-            chrome.tabs.executeScript({
-                code: 'parseInt(document.getElementsByTagName("video")[0].currentTime);'
-            }, cb);
+        chrome.tabs.executeScript({
+            code: getCurrentTime
+        }, result => {
+        if(chrome.runtime.lastError){
+            console.log(chrome.runtime.lastError.message)
+        }else{
+            cb(result);
+        }});
 };
+
+
 
 const extractVideoId = 
     `(function () {
         var video_id = window.location.search.split('v=')[1];
-        var ampersandPosition = video_id.indexOf('&');
-        if(ampersandPosition != -1) {
-            video_id = video_id.substring(0, ampersandPosition);
-            return video_id;
-        }else{
-            return video_id;
+        if(video_id){
+            var ampersandPosition = video_id.indexOf('&');
+            if(ampersandPosition != -1) {
+                video_id = video_id.substring(0, ampersandPosition);
+                return video_id;
+            }else{
+                return video_id;
+            }
         }
     })();`;
 
 const videoId = (cb) => {
     chrome.tabs.executeScript({
         code: extractVideoId
-    }, result => cb(result));    
+    }, result => {
+        if(chrome.runtime.lastError){
+            console.log(chrome.runtime.lastError.message)
+        }else{
+            cb(result);
+        }
+    });    
 }
 
 const set = (obj,cb) => {

@@ -3,7 +3,6 @@ import React, { Fragment } from 'react';
 import Tree from '../Tree/Tree';
 
 function Folder(props) {
-    var prevNode;
 
     var dragStart = (ev) => {
         props.dragStart(ev, ev.target.lastElementChild.children[1].dataset.id);

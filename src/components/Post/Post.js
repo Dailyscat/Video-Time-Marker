@@ -30,6 +30,8 @@ class Post extends Component {
 
     componentDidUpdate(prevProps){
         var pregFolder = document.querySelector(`[data-id="${this.props.selectedFolderId}"]`);
+        var newFolder = document.querySelector(`[data-id="${this.props.currentAddThing}"]`);
+        
         if(!pregFolder) return;
         if(pregFolder.parentElement.previousElementSibling.classList.contains("open") && !pregFolder.nextElementSibling){
             pregFolder.parentElement.previousElementSibling.classList.remove("open")
@@ -46,25 +48,38 @@ class Post extends Component {
                 }
             }
 
-
+            if(newFolder && newFolder.parentElement.previousElementSibling.classList.contains("folder")){
+                newFolder.children[1].children[1].children[1].click();
+            }
 
             if(pregFolder.nextElementSibling && pregFolder.nextElementSibling.className !== "list none" ){
                 if(pregFolder.nextElementSibling.lastElementChild){
                     var filePlacement = pregFolder.nextElementSibling.lastElementChild.getBoundingClientRect().y;
-                    var scrollBottomTop = document.querySelector(".Post").scrollHeight - 328;
+
+
 
                     if(filePlacement < 120){
-                        document.querySelector(".Post").scrollTo({
-                            top: document.querySelector(".Post").scrollTop - Math.abs(filePlacement) -220,
-                            behavior: "smooth"
-                        });
+
+                            document.querySelector(".Post").scrollTo({
+                                top: document.querySelector(".Post").scrollTop - Math.abs(filePlacement) -220,
+                                behavior: "smooth"
+                            });
                     }
         
                     if(filePlacement > 411){
-                        document.querySelector(".Post").scrollTo({
-                            top: document.querySelector(".Post").scrollTop + filePlacement - 402,
-                            behavior: "smooth"
-                        });
+                        console.log(pregFolder.dataset.id);
+                        if(pregFolder.dataset.id === "top"){
+                            var scrollHeight = document.querySelector(".Post").scrollHeight;
+                            document.querySelector(".Post").scrollTo({
+                                top: filePlacement,
+                                behavior: "smooth"
+                            });
+                        }else{
+                            document.querySelector(".Post").scrollTo({
+                                top: document.querySelector(".Post").scrollTop + filePlacement - 392,
+                                behavior: "smooth"
+                            });
+                        }  
                     }
                 }else{
                     return "";
@@ -135,20 +150,18 @@ class Post extends Component {
             }else{
                 this.setState({selectedFolderId:selectedFolderId});
             }
-
             this.props.addFolder(selectedFolderId);
         }
     }
 
-    editName (ev){
-        
+    editName (ev) {
         ev.target.parentElement.parentElement.parentElement.previousElementSibling.classList.remove("none")
         ev.target.parentElement.parentElement.parentElement.previousElementSibling.select();
         ev.target.parentElement.parentElement.parentElement.classList.add("none");
     }
 
     pushEnterFunction (ev) {
-        if (ev.keyCode === 13) {
+        if (ev.target.value && ev.keyCode === 13) {
             this.receiveEditedName(ev.target.value, ev.target.nextElementSibling.dataset.id,ev)
         }
     }

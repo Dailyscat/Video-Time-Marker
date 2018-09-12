@@ -8,7 +8,7 @@ function Tree (props){
         return (
             <Fragment>  
                 { 
-                    props.data.map((currentVal, idx, arr)=> {
+                    props.data.map((currentVal, idx, arr) => {
                         if(currentVal.category === "file"){
                             return (<File 
                                         data = {currentVal} 
@@ -25,7 +25,6 @@ function Tree (props){
                                         copyUrl = {props.copyUrl}
                                         dragStart = {props.dragStart}
                                         dragOver = {props.dragOver}
-                                        drop = {props.drop}
                                         dragLeave = {props.dragLeave}
                                         dragEnter = {props.dragEnter}
                                     />);
@@ -59,7 +58,7 @@ function Tree (props){
             </Fragment>
         );
     }else{
-        return null;
+        return "";
     }
 }
 

@@ -47,7 +47,7 @@ class Search extends Component {
         var button = ev.currentTarget.querySelector(".ui.icon.button");
         var segments = ev.currentTarget.querySelector(".ui.compact.segments");
 
-        if (button == ev.target) {
+        if (button === ev.target) {
             button.classList.add("hidden");
             return;
         }

@@ -10,7 +10,7 @@
 }
 
 .Post .ui.list .list>.item {
-    padding: 3px 0px;
+    padding: 5px 0px;
 }
 
 .header{
@@ -49,8 +49,12 @@ i.check.circle.small.icon{
 
 .ui.list .list>.item .header, .ui.list>.item .header {
     width: 100%;
-    height: 21px;
+    height: 18px;
     font-size: 13px;
+}
+
+.editInput {
+    height:20px;
 }
 
 .ui.list .list>.item .header.none, .ui.list>.item .header.none {

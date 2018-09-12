@@ -11,11 +11,6 @@ function File(props) {
         ev.preventDefault();
         props.dragOver(ev);
     }
-
-    var drop = (ev, cat) => {
-            props.drop(ev);
-    }
-
     var dragLeave = (ev) => {
         props.dragLeave(ev);
     }

@@ -62,15 +62,12 @@ class URLInput extends Component {
     changeView (ev) {
         if(ev.currentTarget.innerText === "Search"){
             ev.target.innerText = "Add";
-            // ev.currentTarget.nextElementSibling.children[2].style.width = "68px";
-            // ev.currentTarget.nextElementSibling.children[2].style.paddingLeft = "17px";
             this.setState({
                 addView: false,
             },() => {this.props.changeView(this.state.addView)})
 
         }else{
             ev.target.innerText = "Search";
-            // ev.currentTarget.nextElementSibling.children[2].style = null;
             this.setState({
                 addView: true,
             },() => {this.props.changeView(this.state.addView)})

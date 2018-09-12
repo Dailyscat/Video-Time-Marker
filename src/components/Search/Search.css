@@ -37,11 +37,6 @@ i.check.circle.small.icon{
     left: 3px;
 }
 
-.ui.list .list>.item .header, .ui.list>.item .header {
-    width: 100%;
-    height: 21px;
-    font-size: 13px;
-}
 
 .ui.list .list>.item .header.none, .ui.list>.item .header.none {
     display:none;
@@ -90,9 +85,7 @@ i.check.circle.small.icon{
 .item.none{
     display:none;
 }
-.editInput {
-    height:22px;
-}
+
 .replace{
     display: inline-block;
 }

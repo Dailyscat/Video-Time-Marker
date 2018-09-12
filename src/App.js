@@ -59,9 +59,11 @@ class App extends Component {
     });
 
     chromeService.currentTime((result) => {
-      this.setState({
-        currentTime:result[0],
-      })
+      if(result){
+        this.setState({
+          currentTime:result[0],
+        })
+      }
     });
 
     chromeService.videoId((result) => {
@@ -87,11 +89,9 @@ class App extends Component {
             }else{
               return "";
             }
-          
         })  
         }
       }
-
       closeFolder(result);
       this.setState({
         defaultFolder: {
@@ -101,21 +101,14 @@ class App extends Component {
       });
       chromeService.set({children: result.children})
     })
-
-    
-
   }
 
   componentDidMount(){
-
-
-
     chromeService.onLoadHandler((tabId, changeInfo, tab) =>{
-        if(changeInfo.status == "loading") {
+        if(changeInfo.status === "loading") {
                 window.close();
         }
     })
-
 }   
 
 
@@ -355,7 +348,7 @@ class App extends Component {
   
   dragStart = (ev, id) => {
     if(id){
-      ev.dataTransfer.setData("text/html", id);
+      this.dragStartId = id;
       ev.dataTransfer.effectAllowed = 'move';
       this.dragStartNode = ev.currentTarget;
 
@@ -370,7 +363,7 @@ class App extends Component {
     }
     if(ev.target.className === "item") {
       this.over = ev.target;
-      var relY = ev.clientY - this.over.offsetTop;
+      var relY = ev.clientY - this.over.getBoundingClientRect().y;
       var height = this.over.offsetHeight / 2;
       var parent = ev.target.parentNode;
       if(relY > height) {
@@ -387,12 +380,10 @@ class App extends Component {
     ev.preventDefault();
     ev.stopPropagation();
     if(ev.target.className === "header" && category === "folder"){
-      // this.dragged.style.display = "none";
       ev.target.parentElement.parentElement.style.background = "";
     } 
     if(ev.target.className === "item") {
-      // this.dragged.style.display = "none";
-      var relY = ev.clientY - this.over.offsetTop;
+      var relY = ev.clientY - this.over.getBoundingClientRect().y;
       var height = this.over.offsetHeight / 2;
       var parent = ev.target.parentNode;
   
@@ -414,37 +405,32 @@ class App extends Component {
   }
 
   drop = (ev,category) => {
-
-    let dragStartId = ev.dataTransfer.getData("text/html");
+    let dragStartId = this.dragStartId;
     let dragStartObj;
     let dragDropArr;
     let dropIdx;
     let dragDropId;
-    let dragStartUpperContainer;
     let target = ev.target.className;
     let up = false;
 
     
     if(dragStartId === ev.currentTarget.lastElementChild.lastElementChild.dataset.id) return;
+
     if(target === "header" && category === "folder"){
       ev.target.parentElement.parentElement.style.background = "";
       dragDropId = ev.target.dataset.id;
-
-    } 
+    }
+    
     if(target === "item") {
+
       dragDropId = ev.target.childNodes[1].childNodes[1].dataset.id;
-      var relY = ev.clientY - this.over.offsetTop;
+      var relY = ev.clientY - this.over.getBoundingClientRect().y;
       var height = this.over.offsetHeight / 2;
-      var parent = ev.target.parentNode;
       if(relY > height) {
         ev.target.style.borderBottom = "";
-        this.nodePlacement = "after";
-        // parent.insertBefore(this.dragged, ev.target.nextElementSibling);
       }else if(relY < height) {
         ev.target.style.borderTop = "";
-        this.nodePlacement = "before"
         up = true;
-        // parent.insertBefore(this.dragged, ev.target);
       }
     }
 
@@ -488,7 +474,6 @@ class App extends Component {
           }else{
             result.open = false;
           }
-          // if(!arr.length) dragStartUpperContainer.open = false;
           return;
         }else{
           if(currentVal.category === "folder"){
@@ -531,11 +516,6 @@ class App extends Component {
         }
       })
     }
-
-
-
-    
-    // ev.target.parentElement.parentElement.style.border = ''
   }
 
   render() {
