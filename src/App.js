@@ -111,7 +111,6 @@ class App extends Component {
     })
 }   
 
-
   receiveEditedName (editedName, currentId) {
     chromeService.get(result => {
       if(currentId === "top") {
@@ -155,6 +154,7 @@ class App extends Component {
   }
 
   addFolder(selectedFolderId){
+
     chromeService.get(result => {
       const folderCopy = Object.assign({}, this.state.folder);
       if(selectedFolderId === "top") {
@@ -195,28 +195,22 @@ class App extends Component {
   }
 
   setTimeMarker(name){
-      this.setState({
-        file: {
-          ...this.state.file,
-          id: Date.now(),
-          name:name,
-          url:`https://youtu.be/`+ this.state.videoId + `?t=`+ this.state.currentTime,
-        },
-        currentAddThing: Date.now(),
-      })
 
       var currentFolderId = this.state.selectedFolderId;
-      chromeService.get(result => {      
+
+      chromeService.get(result => { 
+        const fileCopy = Object.assign({}, this.state.file);   
+        fileCopy.id = Date.now();
+        fileCopy.name = name;
+        fileCopy.url = `https://youtu.be/`+ this.state.videoId + `?t=`+ this.state.currentTime;  
         if(currentFolderId === "top"){
-          result.children.push(
-            this.state.file
-          )
+          result.children.push(fileCopy)
         } else {
           function makeDownFile(result) {
             result.children.map((currentVal, idx, arr) => {
               if(currentVal.category === "folder"){
                 if(Number(this.state.selectedFolderId) === currentVal.id){
-                  currentVal.children.push(this.state.file);
+                  currentVal.children.push(fileCopy);
                   currentVal.open = true;
                   return;
                 }else{
@@ -238,7 +232,8 @@ class App extends Component {
           defaultFolder: {
             ...this.state.defaultFolder,
             children : result.children,
-          }
+          },
+          currentAddThing: fileCopy.id,
         })
       });
   }
@@ -348,16 +343,17 @@ class App extends Component {
   
   dragStart = (ev, id) => {
     if(id){
-      this.dragStartId = id;
+      ev.target.style.opacity = 0.2;
       ev.dataTransfer.effectAllowed = 'move';
-      this.dragStartNode = ev.currentTarget;
-
+      this.dragStartId = id;
+      this.dragStartNode = ev.target;
     } 
   }
 
   dragEnter = (ev, category) => {
     ev.preventDefault();
     ev.stopPropagation();
+    if(ev.target === this.dragStartNode) return;
     if(ev.target.className === "header" && category === "folder") {
       ev.target.parentElement.parentElement.style.background = "#ffbdbd";
     }
@@ -365,13 +361,11 @@ class App extends Component {
       this.over = ev.target;
       var relY = ev.clientY - this.over.getBoundingClientRect().y;
       var height = this.over.offsetHeight / 2;
-      var parent = ev.target.parentNode;
+
       if(relY > height) {
         ev.target.style.borderBottom = "2px #a99696 dashed";
-        this.nodePlacement = "after";
       }else if(relY < height) {
         ev.target.style.borderTop = "2px #a99696 dashed";
-        this.nodePlacement = "before"
       }
     }
   }
@@ -379,22 +373,22 @@ class App extends Component {
   dragLeave = (ev,category) => {
     ev.preventDefault();
     ev.stopPropagation();
+
+    if(ev.target === this.dragStartNode) return;
+
     if(ev.target.className === "header" && category === "folder"){
       ev.target.parentElement.parentElement.style.background = "";
     } 
     if(ev.target.className === "item") {
       var relY = ev.clientY - this.over.getBoundingClientRect().y;
       var height = this.over.offsetHeight / 2;
-      var parent = ev.target.parentNode;
   
       if(relY > height) {
         ev.target.style.borderBottom = "";
         ev.target.style.borderTop = "";
-        this.nodePlacement = "after";
       }else if(relY < height) {
         ev.target.style.borderBottom = "";
         ev.target.style.borderTop = "";
-        this.nodePlacement = "before"
       }
     }
   }
@@ -404,7 +398,19 @@ class App extends Component {
     
   }
 
+  dragEnd = (ev) => {
+    ev.preventDefault();
+    ev.stopPropagation();
+    this.dragStartNode.style.opacity = 1;
+    if(this.over){
+      this.over.style.borderBottom = "";
+      this.over.style.borderTop = "";
+    }
+  }
+
   drop = (ev,category) => {
+    ev.stopPropagation();
+    
     let dragStartId = this.dragStartId;
     let dragStartObj;
     let dragDropArr;
@@ -419,25 +425,34 @@ class App extends Component {
     if(target === "header" && category === "folder"){
       ev.target.parentElement.parentElement.style.background = "";
       dragDropId = ev.target.dataset.id;
+      this.setState({
+        selectedFolderId: ev.target.dataset.id
+      })
     }
     
     if(target === "item") {
-
       dragDropId = ev.target.childNodes[1].childNodes[1].dataset.id;
       var relY = ev.clientY - this.over.getBoundingClientRect().y;
       var height = this.over.offsetHeight / 2;
+      
       if(relY > height) {
         ev.target.style.borderBottom = "";
       }else if(relY < height) {
         ev.target.style.borderTop = "";
         up = true;
       }
+      this.setState({
+        selectedFolderId: ev.target.parentElement.previousSibling.dataset.id
+      })
     }
 
     chromeService.get((result) => {
+
       findDragStart(result);
       findDragDrop(result);
+
       if(dragDropArr === undefined) return ;
+
       if( target === "header" ) {
         dragDropArr.push(dragStartObj);
       }else if ( target === "item" ) {
@@ -520,7 +535,7 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
+      <div className="App" onDragEnd = {this.dragEnd.bind(this)}>
         <Header openSettingPage = {this.openSettingPage.bind(this)}/>
         <PostContainer 
           data = {this.state.defaultFolder.children}

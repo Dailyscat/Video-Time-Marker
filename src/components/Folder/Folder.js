@@ -26,12 +26,11 @@ function Folder(props) {
     }
     return (
                 <List.Item draggable onDragStart = {dragStart} onDragOver = {dragOver} onDrop = {drop}  onDragLeave = {dragLeave} onDragEnter = {dragEnter} >
-                    <List.Icon name= {props.data.open ?'folder outline open' :'folder outline ' } />
+                    <List.Icon name= {props.data.children.length !== 0 && (props.data.open || props.openedFolder.includes(`${props.data.id}`)) ?'folder outline open' :'folder outline ' } />
                     <List.Content>
                         <input  className = "editInput none" defaultValue= {props.data.name} onKeyDown = {props.pushEnterFunction} onBlur = {props.inputBlur} autoFocus /> 
                         <List.Header data-id = {props.data.id} onMouseEnter = {props.onHover} onMouseLeave = {props.offHover} onClick = {props.hideList}>
                             {props.data.name}
-                            
                             {Number(props.selectedFolderId) === props.data.id ? (<Icon color = "red" name = "check circle" size= "small" data-id = {props.data.id}/>) : (<Icon name = "check circle" size= "small" data-id = {props.data.id}/>)}
                                     <Fragment>                           
                                         <Button icon className = "none" color="white" data-id = {props.data.id}> 
@@ -48,7 +47,8 @@ function Folder(props) {
                             props.data.children.length === 0 
                             ? ""
                             : 
-                            (<List.List className = {props.data.open || props.openedFolder.includes(props.data.id) ?"" :"none" }>
+                            (<List.List className = {props.data.open || props.openedFolder.includes(`${props.data.id}`) ?"" :"none" }>
+                                
                                 <Tree 
                                     data = {props.data.children} 
                                     selectedFolderId = {props.selectedFolderId}

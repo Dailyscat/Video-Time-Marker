@@ -17,6 +17,8 @@ class Post extends Component {
     constructor(props){
         super(props);
         
+        this.postForScroll = React.createRef();
+
         this.state = {
             folderSettingBtnOpen: false,
             defaultSelected: "top",
@@ -29,8 +31,8 @@ class Post extends Component {
     }   
 
     componentDidUpdate(prevProps){
-        var pregFolder = document.querySelector(`[data-id="${this.props.selectedFolderId}"]`);
-        var newFolder = document.querySelector(`[data-id="${this.props.currentAddThing}"]`);
+        var pregFolder = this.postForScroll.current.querySelector(`[data-id="${this.props.selectedFolderId}"]`);
+        var newFolder = this.postForScroll.current.querySelector(`[data-id="${this.props.currentAddThing}"]`);
         
         if(!pregFolder) return;
         if(pregFolder.parentElement.previousElementSibling.classList.contains("open") && !pregFolder.nextElementSibling){
@@ -38,7 +40,6 @@ class Post extends Component {
         }
 
         if(prevProps.currentAddThing !== this.props.currentAddThing){
-
             if(!pregFolder.parentElement.previousElementSibling.classList.contains("open")){
                 if(pregFolder.nextElementSibling){
                     pregFolder.nextElementSibling.classList.remove("none");
@@ -60,23 +61,22 @@ class Post extends Component {
 
                     if(filePlacement < 120){
 
-                            document.querySelector(".Post").scrollTo({
-                                top: document.querySelector(".Post").scrollTop - Math.abs(filePlacement) -220,
+                            this.postForScroll.current.scrollTo({
+                                top: this.postForScroll.current.scrollTop - Math.abs(filePlacement) -220,
                                 behavior: "smooth"
                             });
                     }
         
                     if(filePlacement > 411){
-                        console.log(pregFolder.dataset.id);
                         if(pregFolder.dataset.id === "top"){
-                            var scrollHeight = document.querySelector(".Post").scrollHeight;
-                            document.querySelector(".Post").scrollTo({
-                                top: filePlacement,
+                            var scrollHeight = this.postForScroll.current.scrollHeight;
+                            this.postForScroll.current.scrollTo({
+                                top: scrollHeight,
                                 behavior: "smooth"
                             });
                         }else{
-                            document.querySelector(".Post").scrollTo({
-                                top: document.querySelector(".Post").scrollTop + filePlacement - 392,
+                            this.postForScroll.current.scrollTo({
+                                top: this.postForScroll.current.scrollTop + filePlacement - 392,
                                 behavior: "smooth"
                             });
                         }  
@@ -90,6 +90,8 @@ class Post extends Component {
             }
         }
     }
+
+
 
     hideList (ev) {
         if(ev.target.className === "header"){
@@ -218,7 +220,7 @@ class Post extends Component {
     
     render() {
         return (
-            <div className="Post">
+            <div className="Post" ref = {this.postForScroll}>
                 <List >
                 <List.Item className = "forExpandWidth">
                     <List.Icon name='folder open' />
@@ -237,7 +239,7 @@ class Post extends Component {
                                     </Button>
                                 </Fragment>
                         </List.Header>
-                        <List.List onDrop={this.drop.bind(this)}>
+                        <List.List onDrop={this.drop.bind(this)} onDragLeave = {this.dragLeave.bind(this)}>
                         <Tree 
                         
                             data = {this.props.data}

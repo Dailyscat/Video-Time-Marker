@@ -25,6 +25,7 @@ function Tree (props){
                                         copyUrl = {props.copyUrl}
                                         dragStart = {props.dragStart}
                                         dragOver = {props.dragOver}
+                                        drop = {props.drop}
                                         dragLeave = {props.dragLeave}
                                         dragEnter = {props.dragEnter}
                                     />);

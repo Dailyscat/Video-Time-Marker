@@ -110,3 +110,10 @@ button.ui.white.icon.button.none{
 .replace{
     display: inline-block;
 }
+
+.bottom{
+    height: 18px;
+    width: 1px;
+    display: none;
+
+}

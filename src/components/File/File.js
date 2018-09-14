@@ -3,7 +3,6 @@ import React, { Fragment } from 'react';
 
 function File(props) {
     var dragStart = (ev) => {
-
         props.dragStart(ev,ev.target.lastElementChild.lastElementChild.dataset.id);
     }
 
@@ -11,6 +10,11 @@ function File(props) {
         ev.preventDefault();
         props.dragOver(ev);
     }
+
+    var drop = (ev, cat) => {
+        props.drop(ev);
+    }
+
     var dragLeave = (ev) => {
         props.dragLeave(ev);
     }
@@ -19,7 +23,7 @@ function File(props) {
         props.dragEnter(ev);
     }
     return (
-            <List.Item draggable onDragStart = {dragStart} onDragOver = {dragOver} onDragLeave = {dragLeave} onDragEnter = {dragEnter}>
+            <List.Item draggable onDragStart = {dragStart} onDragOver = {dragOver} onDrop = {drop} onDragLeave = {dragLeave} onDragEnter = {dragEnter}>
             <List.Icon name='file video ' color = "black" />
                 <List.Content>
                     <input  className = "editInput none" defaultValue = {props.data.name} onKeyDown = {props.pushEnterFunction} onBlur = {props.inputBlur} autoFocus  /> 

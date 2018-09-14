@@ -1,15 +1,16 @@
 {
-    "name": "Getting Started Example",
+    "name": "YouTube Time Marker",
     "version": "1.0",
-    "description": "Build an Extension!",
+    "description": "시청하던 동영상의 특정 부분을 저장하고 그룹화하여 관리할 수 있습니다. ",
     "permissions": ["storage","activeTab","declarativeContent","http://*/*", "https://*/*","*://*/*"],
-    // "background": {
-    //   "scripts": ["static/js/main.da47f771.js"],
-    //   "persistent": false
-    // },
     "browser_action": {
       "default_popup": "index.html",
-      "default_icon": "youtubeTimeMakerIcon.png"
+      "default_icon": "iconBox/ytm128.png"
+    },
+    "icons": { 
+      "128": "iconBox/ytm128.png",
+      "48": "iconBox/ytm48.png",
+      "16": "iconBox/ytm16.png" 
     },
     "commands": {
       "_execute_browser_action": {
