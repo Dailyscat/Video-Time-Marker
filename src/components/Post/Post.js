@@ -35,7 +35,7 @@ class Post extends Component {
         var newFolder = this.postForScroll.current.querySelector(`[data-id="${this.props.currentAddThing}"]`);
         
         if(!pregFolder) return;
-        if(pregFolder.parentElement.previousElementSibling.classList.contains("open") && !pregFolder.nextElementSibling){
+        if(pregFolder.className !== "default" && pregFolder.parentElement.previousElementSibling.classList.contains("open") && !pregFolder.nextElementSibling){
             pregFolder.parentElement.previousElementSibling.classList.remove("open")
         }
 
