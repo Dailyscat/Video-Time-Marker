@@ -24,9 +24,9 @@ class Post extends Component {
             defaultSelected: "top",
             selected: "top",
             hover: false,
-            folderEditList:false,
-            selectedFolderId:null,
-            openedFolder:["top"],
+            folderEditList: false,
+            selectedFolderId: null,
+            openedFolder: ["top"],
         };
     }   
 
@@ -35,9 +35,6 @@ class Post extends Component {
         var newFolder = this.postForScroll.current.querySelector(`[data-id="${this.props.currentAddThing}"]`);
         
         if(!pregFolder) return;
-        if(pregFolder.className !== "default" && pregFolder.parentElement.previousElementSibling.classList.contains("open") && !pregFolder.nextElementSibling){
-            pregFolder.parentElement.previousElementSibling.classList.remove("open")
-        }
 
         if(prevProps.currentAddThing !== this.props.currentAddThing){
             if(!pregFolder.parentElement.previousElementSibling.classList.contains("open")){
@@ -94,6 +91,7 @@ class Post extends Component {
 
 
     hideList (ev) {
+        this.props.selectedFolder(ev.currentTarget.dataset.id);
         if(ev.target.className === "header"){
             if(ev.target.nextElementSibling){
                 ev.target.nextElementSibling.classList.toggle("none");
@@ -101,15 +99,17 @@ class Post extends Component {
                 
             }
         }
-        this.props.selectedFolder(ev.currentTarget.dataset.id);
         if(!this.state.openedFolder.includes(ev.currentTarget.dataset.id)){
             this.setState({
-                selected: ev.currentTarget.dataset.id,
                 openedFolder:this.state.openedFolder.concat([ev.currentTarget.dataset.id]),
             })
         }else{
+            var opened = this.state.openedFolder;
+            opened.map((current, idx, arr) => {
+                if(current === ev.currentTarget.dataset.id) opened.splice(idx, 1);
+            })
             this.setState({
-                selected: ev.currentTarget.dataset.id,
+                openedFolder: opened,
             });
         }
     }
@@ -137,8 +137,11 @@ class Post extends Component {
     }
 
 
-    folderEditBtn (ev){
+    folderEditBtn (ev, category){
+        ev.stopPropagation();
         ev.target.nextElementSibling.classList.toggle("none");
+        if(category === "folder") this.props.selectedFolder(ev.currentTarget.dataset.id);
+
     }
 
     addFolder (ev){
@@ -146,11 +149,11 @@ class Post extends Component {
             var selectedFolderId = ev.target.parentElement.parentElement.parentElement.dataset.id;
             if(!this.state.openedFolder.includes(selectedFolderId)){
                 this.setState({
-                    selectedFolderId:selectedFolderId,
-                    openedFolder:this.state.openedFolder.concat([selectedFolderId]),
+                    selectedFolderId: selectedFolderId,
+                    openedFolder: this.state.openedFolder.concat([selectedFolderId]),
                 })
             }else{
-                this.setState({selectedFolderId:selectedFolderId});
+                this.setState({selectedFolderId: selectedFolderId});
             }
             this.props.addFolder(selectedFolderId);
         }
@@ -163,14 +166,21 @@ class Post extends Component {
     }
 
     pushEnterFunction (ev) {
-        if (ev.target.value && ev.keyCode === 13) {
-            this.receiveEditedName(ev.target.value, ev.target.nextElementSibling.dataset.id,ev)
+        if (ev.keyCode === 13) {
+            if(ev.target.value !== "" ){
+                this.receiveEditedName(ev.target.value, ev.target.nextElementSibling.dataset.id,ev)
+            }else{
+                this.receiveEditedName(ev.target.defaultValue, ev.target.nextElementSibling.dataset.id,ev)
+            }
         }
     }
 
     inputBlur (ev) {
-
-        this.receiveEditedName(ev.target.value, ev.target.nextElementSibling.dataset.id,ev)
+        if(ev.target.value !== "" ){
+            this.receiveEditedName(ev.target.value, ev.target.nextElementSibling.dataset.id,ev)
+        }else{
+            this.receiveEditedName(ev.target.defaultValue, ev.target.nextElementSibling.dataset.id,ev)
+        }
     }
 
     receiveEditedName (editedName, currentId, ev){
@@ -181,7 +191,7 @@ class Post extends Component {
 
     delete (ev) {
         this.props.delete(ev.target.parentElement.parentElement.dataset.id);
-        if(ev.target.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.className !== "default" && ev.target.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.children.length === 1){
+        if(ev.target.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.previousElementSibling.dataset.id !== "top" && ev.target.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.children.length === 1){
             ev.target.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement.previousElementSibling.classList.remove("open")
         }
     }

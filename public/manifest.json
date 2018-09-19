@@ -1,7 +1,8 @@
 {
-    "name": "YouTube Time Marker",
     "version": "1.0",
-    "description": "시청하던 동영상의 특정 부분을 저장하고 그룹화하여 관리할 수 있습니다. ",
+    "name": "__MSG_appName__",
+    "description": "__MSG_appDesc__",
+    "default_locale": "en",
     "permissions": ["storage","activeTab","declarativeContent","http://*/*", "https://*/*","*://*/*"],
     "browser_action": {
       "default_popup": "index.html",

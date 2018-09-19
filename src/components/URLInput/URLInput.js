@@ -16,7 +16,26 @@ class URLInput extends Component {
             searchText: '',
             addView: true,
         };
+
+        this.urlInput = React.createRef();
     }   
+
+    componentDidUpdate(prevProps, prevState,){
+
+        if(this.props.inYoutube){
+            if(prevProps.inYoutube !== this.props.inYoutube) this.urlInput.current.querySelector("input").focus();
+        }
+
+        if(prevState.addView !== this.state.addView){
+            if(this.state.addView){
+                this.urlInput.current.querySelectorAll("input")[0].focus();
+                this.urlInput.current.querySelectorAll("input")[0].select();
+            }else{
+                this.urlInput.current.querySelectorAll("input")[1].focus();
+                this.urlInput.current.querySelectorAll("input")[1].select();
+            }
+        }
+    }
 
     updateMarkName(ev) {
         this.setState({
@@ -61,13 +80,14 @@ class URLInput extends Component {
 
     changeView (ev) {
         if(ev.currentTarget.innerText === "Search"){
-            ev.target.innerText = "Add";
+            ev.currentTarget.firstChild.innerText = "Add";
+
             this.setState({
                 addView: false,
             },() => {this.props.changeView(this.state.addView)})
-
         }else{
-            ev.target.innerText = "Search";
+            ev.currentTarget.firstChild.innerText = "Search";
+
             this.setState({
                 addView: true,
             },() => {this.props.changeView(this.state.addView)})
@@ -77,7 +97,7 @@ class URLInput extends Component {
     render() {
         
         return (
-            <div className="URLInput">
+            <div className="URLInput" ref={this.urlInput}>
                 <div className = "buttonCase" onClick = {this.changeView.bind(this)} ><a href="#" class="myButton">Search</a></div>
                 <Input
                     className = {this.state.addView ? "" : "none"}

@@ -43,6 +43,11 @@ class PostContainer extends Component {
                         delete = {this.props.delete.bind(this)}
                         moveToUrl = {this.props.moveToUrl.bind(this)}
                         currentAddThing = {this.props.currentAddThing}
+                        dragStart = {this.props.dragStart.bind(this)}
+                        dragOver = {this.props.dragOver.bind(this)}
+                        drop = {this.props.drop.bind(this)}
+                        dragLeave = {this.props.dragLeave.bind(this)}
+                        dragEnter = {this.props.dragEnter.bind(this)}
                     />
                 }
             </PostWrapper>

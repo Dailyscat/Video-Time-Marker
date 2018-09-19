@@ -3,6 +3,7 @@ import './App.css';
 import { Header, SettingPage } from './components';
 import {PostContainer} from './containers';
 import chromeService from './services/chromeService';
+/* global chrome */
 
 
 class App extends Component {
@@ -11,9 +12,9 @@ class App extends Component {
     super(props);
 
     this.state = {
-      data : [],
-      defaultFolder : {
-        folderName : "Youtube Time Marker",
+      data: [],
+      defaultFolder: {
+        folderName: "Youtube Time Marker",
         folderId: "top",
         children: [],
         newTabOpen : true,
@@ -32,14 +33,15 @@ class App extends Component {
         url: null,
       },
       currentTime: 0,
-      selectedFolderId : "top",
+      selectedFolderId: "top",
       inYoutube: false,
-      category : null,
-      videoId : null,
-      settingPageOpen : false,
+      category: null,
+      videoId: null,
+      settingPageOpen: false,
       filteredArr: [],
       addView: true,
-      currentAddThing:null,
+      currentAddThing: null,
+      searchInputValForState:""
     };
 
     chromeService.initialDB(result => { 
@@ -51,7 +53,7 @@ class App extends Component {
           defaultFolder: {
             ...this.state.defaultFolder,
             folderName: result.folderName,
-            children : result.children,
+            children: result.children,
             newTabOpen: result.newTabOpen
           }
         })
@@ -61,7 +63,7 @@ class App extends Component {
     chromeService.currentTime((result) => {
       if(result){
         this.setState({
-          currentTime:result[0],
+          currentTime: result[0],
         })
       }
     });
@@ -69,12 +71,14 @@ class App extends Component {
     chromeService.videoId((result) => {
       if(result[0]){
         this.setState({
-          videoId : result[0],
+          videoId: result[0],
           inYoutube: true,
         })
       }
     });  
-    
+  }
+
+  componentDidMount(){
     chromeService.get(result => {
       function closeFolder (result){
         if(result.children){
@@ -96,20 +100,20 @@ class App extends Component {
       this.setState({
         defaultFolder: {
           ...this.state.defaultFolder,
-          children:result.children,
+          children: result.children,
         }
       });
       chromeService.set({children: result.children})
     })
-  }
 
-  componentDidMount(){
     chromeService.onLoadHandler((tabId, changeInfo, tab) =>{
         if(changeInfo.status === "loading") {
                 window.close();
         }
     })
-}   
+  }   
+  
+
 
   receiveEditedName (editedName, currentId) {
     chromeService.get(result => {
@@ -140,7 +144,7 @@ class App extends Component {
         defaultFolder: {
           ...this.state.defaultFolder,
           folderName: result.folderName,
-          children:result.children,
+          children: result.children,
         }
       });
       chromeService.set({folderName: result.folderName, children: result.children})
@@ -186,11 +190,15 @@ class App extends Component {
       this.setState({
         defaultFolder: {
           ...this.state.defaultFolder,
-          children:result.children,
+          children: result.children,
         },
         currentAddThing: folderCopy.id,
       });
-      chromeService.set({children: result.children})
+      chromeService.set({children: result.children},
+        () => {
+          if(!this.state.addView)this.searchInputVal(this.state.searchInputValForState);
+        })
+      
     })
   }
 
@@ -240,9 +248,15 @@ class App extends Component {
 
   delete(currentId){
     chromeService.get(result => {
+      var deleteParentFolder;
       function deleteChildren (result) {
           result.children.map((currentVal, idx, arr) => {
               if(Number(currentId) === currentVal.id){
+                if(result.folderId){
+                  deleteParentFolder = result.folderId;
+                }else{
+                  deleteParentFolder = result.id;
+                } 
                 arr.splice(idx, 1);
                 return;
               }else{
@@ -262,10 +276,15 @@ class App extends Component {
       this.setState({
         defaultFolder: {
           ...this.state.defaultFolder,
-          children:result.children,
-        }
-      });
-      chromeService.set({children: result.children})
+          children: result.children,
+        },
+        selectedFolderId : deleteParentFolder,
+      })
+
+      chromeService.set({children: result.children},
+        () => {
+          if(!this.state.addView)this.searchInputVal(this.state.searchInputValForState);
+        })
     })
   }
 
@@ -330,6 +349,7 @@ class App extends Component {
         find(result);
         this.setState({
           filteredArr: filteredArr,
+          searchInputValForState: value,
         })
       })
     }else{
@@ -353,7 +373,7 @@ class App extends Component {
   dragEnter = (ev, category) => {
     ev.preventDefault();
     ev.stopPropagation();
-    if(ev.target === this.dragStartNode) return;
+    if(ev.currentTarget === this.dragStartNode) return;
     if(ev.target.className === "header" && category === "folder") {
       ev.target.parentElement.parentElement.style.background = "#ffbdbd";
     }
@@ -405,6 +425,7 @@ class App extends Component {
     if(this.over){
       this.over.style.borderBottom = "";
       this.over.style.borderTop = "";
+      this.over.parentElement.parentElement.style.background = "";
     }
   }
 
@@ -472,7 +493,7 @@ class App extends Component {
       this.setState({
         defaultFolder: {
           ...this.state.defaultFolder,
-          children:result.children,
+          children: result.children,
         }
       })
     })

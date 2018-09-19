@@ -4,6 +4,10 @@ import Tree from '../Tree/Tree';
 
 function Folder(props) {
 
+    var folderEditBtn = (ev) => {
+        props.folderEditBtn(ev,"folder");
+    }
+
     var dragStart = (ev) => {
         props.dragStart(ev, ev.target.lastElementChild.children[1].dataset.id);
     }
@@ -34,7 +38,7 @@ function Folder(props) {
                             {Number(props.selectedFolderId) === props.data.id ? (<Icon color = "red" name = "check circle" size= "small" data-id = {props.data.id}/>) : (<Icon name = "check circle" size= "small" data-id = {props.data.id}/>)}
                                     <Fragment>                           
                                         <Button icon className = "none" color="white" data-id = {props.data.id}> 
-                                            <Icon size="small" name="ellipsis horizontal" onClick = {props.folderEditBtn} data-id = {props.data.id}/>
+                                            <Icon size="small" name="ellipsis horizontal" onClick = {folderEditBtn} data-id = {props.data.id}/>
                                                 <Segment.Group compact className = "none"  >
                                                     <Segment textAlign="center" onClick = {props.addFolder}>Add Folder</Segment>
                                                     <Segment textAlign="center" onClick = {props.editName}>Edit Name</Segment>
