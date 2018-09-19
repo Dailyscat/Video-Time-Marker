@@ -7,8 +7,8 @@
 /coverage
 
 # production
-/build
-/YouTube Time Marker Promo
+build/
+YouTube Time Marker Promo/
 
 
 # misc
