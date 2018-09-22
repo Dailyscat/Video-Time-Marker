@@ -91,26 +91,30 @@ class Post extends Component {
 
 
     hideList (ev) {
-        this.props.selectedFolder(ev.currentTarget.dataset.id);
+        this.props.selectedFolder(ev.currentTarget.dataset.id,);
+
         if(ev.target.className === "header"){
             if(ev.target.nextElementSibling){
-                ev.target.nextElementSibling.classList.toggle("none");
-                ev.target.parentElement.previousElementSibling.classList.toggle("open")
-                
+                if(ev.target.nextElementSibling.classList.contains("none")){
+                    ev.target.nextElementSibling.classList.toggle("none");
+                    ev.target.parentElement.previousElementSibling.classList.toggle("open");
+                    this.setState({
+                        openedFolder:this.state.openedFolder.concat([ev.currentTarget.dataset.id]),
+                    })
+                }else{
+                    if(this.props.selectedFolderId === ev.currentTarget.dataset.id){
+                        ev.target.nextElementSibling.classList.toggle("none");
+                        ev.target.parentElement.previousElementSibling.classList.toggle("open")     
+                        var opened = this.state.openedFolder;
+                        opened.map((current, idx, arr) => {
+                            if(current === ev.currentTarget.dataset.id) opened.splice(idx, 1);
+                        })
+                        this.setState({
+                            openedFolder: opened,
+                        });
+                    }
+                } 
             }
-        }
-        if(!this.state.openedFolder.includes(ev.currentTarget.dataset.id)){
-            this.setState({
-                openedFolder:this.state.openedFolder.concat([ev.currentTarget.dataset.id]),
-            })
-        }else{
-            var opened = this.state.openedFolder;
-            opened.map((current, idx, arr) => {
-                if(current === ev.currentTarget.dataset.id) opened.splice(idx, 1);
-            })
-            this.setState({
-                openedFolder: opened,
-            });
         }
     }
 
@@ -140,7 +144,7 @@ class Post extends Component {
     folderEditBtn (ev, category){
         ev.stopPropagation();
         ev.target.nextElementSibling.classList.toggle("none");
-        if(category === "folder") this.props.selectedFolder(ev.currentTarget.dataset.id);
+        if(category === "folder" || ev.currentTarget.dataset.id) this.props.selectedFolder(ev.currentTarget.dataset.id);
 
     }
 

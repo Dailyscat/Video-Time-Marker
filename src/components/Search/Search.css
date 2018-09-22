@@ -13,6 +13,9 @@
     width: 100%;
 }
 
+.Search .ui.list{
+    width: max-content;
+}
 
 .Search .ui.icon.button {
     background-color: #fff;
@@ -61,7 +64,8 @@ i.check.circle.small.icon{
     line-height: 12px;
     width: 72px;
 }
- .ui.segments:last-child > div {
+
+.ui.segments:last-child > div {
     padding: 3px;
 }
 

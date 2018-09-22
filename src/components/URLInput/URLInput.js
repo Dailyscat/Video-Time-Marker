@@ -18,13 +18,30 @@ class URLInput extends Component {
         };
 
         this.urlInput = React.createRef();
+        this.guideForInitFocus = 0;
+        this.avoidAddFolderFunc = [];
     }   
 
-    componentDidUpdate(prevProps, prevState,){
 
-        if(this.props.inYoutube){
-            if(prevProps.inYoutube !== this.props.inYoutube) this.urlInput.current.querySelector("input").focus();
+    componentDidUpdate(prevProps, prevState,snapshot){
+        
+        if(this.props.inYoutube){ 
+            if(this.guideForInitFocus === 0){
+                this.guideForInitFocus = 1;
+                this.urlInput.current.querySelector("input").focus();
+            }else if(prevProps.currentAddThing !== this.props.currentAddThing) {
+                this.avoidAddFolderFunc.push("add");
+            }else{
+                if(this.avoidAddFolderFunc.length === 0 && this.props.selectedFolderId !== prevProps.selectedFolderId){
+                    this.urlInput.current.querySelector("input").focus();
+
+                }else{
+                    this.avoidAddFolderFunc = [];
+                }
+            }
         }
+
+
 
         if(prevState.addView !== this.state.addView){
             if(this.state.addView){

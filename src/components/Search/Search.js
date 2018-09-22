@@ -144,10 +144,14 @@ class Search extends Component {
         return;
     }
 
+    dragStart = (ev) => {
+        return;
+    }
+
     render() {
         return (
             <div className="Search">
-                <List >
+                <List onDrop={this.drop.bind(this)} onDragLeave = {this.dragLeave.bind(this)}>
                     {
                         this.props.data.length === 0
                         ? ""
@@ -168,6 +172,11 @@ class Search extends Component {
                             copyUrl = {this.copyUrl.bind(this)}
                             currentAddThing = {this.props.currentAddThing}
                             openedFolder = {this.state.openedFolder}
+                            dragStart = {this.dragStart.bind(this)}
+                            dragOver = {this.dragOver.bind(this)}
+                            drop = {this.drop.bind(this)}
+                            dragLeave = {this.dragLeave.bind(this)}
+                            dragEnter = {this.dragEnter.bind(this)}
                         />)
                     }
                 </List>

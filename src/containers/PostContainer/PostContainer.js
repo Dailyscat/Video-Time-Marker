@@ -13,6 +13,9 @@ class PostContainer extends Component {
                     inYoutube = {this.props.inYoutube}
                     searchInputVal = {this.props.searchInputVal}
                     changeView = {this.props.changeView.bind(this)}
+                    selectedFolderId = {this.props.selectedFolderId}
+                    currentAddThing = {this.props.currentAddThing}
+
                     />
                 {this.props.changePostView 
                 ? 

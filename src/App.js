@@ -3,7 +3,6 @@ import './App.css';
 import { Header, SettingPage } from './components';
 import {PostContainer} from './containers';
 import chromeService from './services/chromeService';
-/* global chrome */
 
 
 class App extends Component {
@@ -76,15 +75,13 @@ class App extends Component {
         })
       }
     });  
-  }
 
-  componentDidMount(){
     chromeService.get(result => {
       function closeFolder (result){
         if(result.children){
           result.children.map((currentVal, idx, arr) => {
-            currentVal.open = false;
             if(currentVal.category === "folder"){
+              currentVal.open = false;
               if(currentVal.children.length > 0){
                 closeFolder.call(this,currentVal);
               }else{
@@ -105,6 +102,9 @@ class App extends Component {
       });
       chromeService.set({children: result.children})
     })
+  }
+
+  componentDidMount(){
 
     chromeService.onLoadHandler((tabId, changeInfo, tab) =>{
         if(changeInfo.status === "loading") {
@@ -112,8 +112,6 @@ class App extends Component {
         }
     })
   }   
-  
-
 
   receiveEditedName (editedName, currentId) {
     chromeService.get(result => {
@@ -145,7 +143,7 @@ class App extends Component {
           ...this.state.defaultFolder,
           folderName: result.folderName,
           children: result.children,
-        }
+        },
       });
       chromeService.set({folderName: result.folderName, children: result.children})
     })
@@ -194,6 +192,7 @@ class App extends Component {
         },
         currentAddThing: folderCopy.id,
       });
+
       chromeService.set({children: result.children},
         () => {
           if(!this.state.addView)this.searchInputVal(this.state.searchInputValForState);
@@ -421,7 +420,7 @@ class App extends Component {
   dragEnd = (ev) => {
     ev.preventDefault();
     ev.stopPropagation();
-    this.dragStartNode.style.opacity = 1;
+    if(this.dragStartNode){this.dragStartNode.style.opacity = 1;} 
     if(this.over){
       this.over.style.borderBottom = "";
       this.over.style.borderTop = "";
