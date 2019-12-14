@@ -1,5 +1,3 @@
-import PostContainer from './PostContainer/PostContainer.js';
+import PostContainer from "./PostContainer/PostContainer.js";
 
-export {
-    PostContainer,
-};
+export { PostContainer };
