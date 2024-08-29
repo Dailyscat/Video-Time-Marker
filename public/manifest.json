@@ -4,7 +4,7 @@
     "description": "__MSG_appDesc__",
     "default_locale": "en",
     "permissions": ["storage","activeTab","declarativeContent","http://*/*", "https://*/*","*://*/*"],
-    "browser_action": {
+    "action": {
       "default_popup": "index.html",
       "default_icon": "iconBox/ytm128.png"
     },
@@ -23,5 +23,5 @@
         }
       }
     },
-    "manifest_version": 2
+    "manifest_version": 3
   }
